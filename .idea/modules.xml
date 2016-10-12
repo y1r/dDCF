@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dDCF.iml" filepath="$PROJECT_DIR$/.idea/modules/dDCF.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dDCF_main.iml" filepath="$PROJECT_DIR$/.idea/modules/dDCF_main.iml" group="dDCF" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dDCF_test.iml" filepath="$PROJECT_DIR$/.idea/modules/dDCF_test.iml" group="dDCF" />
+    </modules>
+  </component>
+</project>
