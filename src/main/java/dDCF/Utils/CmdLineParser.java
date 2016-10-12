@@ -6,8 +6,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class CmdLineParser {
-	public static Config Parse(String[] args) throws ParseException {
-		Options opts = new Options();
+	Options opts;
+
+	public CmdLineParser() {
+		opts = new Options();
 
 		// for master mode
 		opts.addOption("m", "master", false, "Set this option when you use this computer as a master-node.");
@@ -19,10 +21,22 @@ public class CmdLineParser {
 
 		// common options
 		opts.addOption("p", "port", true, "Set this option when you use user-defined TCP port number.");
+		opts.addOption("h", "help", false, "Show usage.");
+	}
 
+	public void showUsage() {
+		HelpFormatter formatter = new HelpFormatter();
+		formatter.printHelp("dDCF.jar", opts);
+	}
+
+	public Config Parse(String[] args) throws ParseException {
 		Config cfg = new Config();
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(opts, args);
+
+		if (cmd.hasOption('h')) {
+			showUsage();
+		}
 
 		// for master mode
 		if (cmd.hasOption('m')) {
