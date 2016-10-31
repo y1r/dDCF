@@ -12,16 +12,16 @@ public class CmdLineParser {
 		opts = new Options();
 
 		// for master mode
-		opts.addOption("m", "master", false, "Set this option when you use this computer as a master-node.");
-		opts.addOption("j", "job", true, "Select your job jar file.");
+		opts.addOption("m", "master", true, "Use this node as a master. Select your job jar file.");
 
 		// for worker mode
-		opts.addOption("w", "worker", false, "Set this option when you use this computer as a worker-node.");
-		opts.addOption("h", "host", false, "Select your master IP addr.");
+		opts.addOption("w", "worker", true, "Use this as a worker. Select your master address.");
+		opts.addOption("r", "remote-port", true, "Select your remote(master) port number.");
 
 		// common options
-		opts.addOption("p", "port", true, "Set this option when you use user-defined TCP port number.");
+		opts.addOption("l", "local-port", true, "Select your local port number.");
 		opts.addOption("h", "help", false, "Show usage.");
+		opts.addOption("d", "debug", false, "Debug mode");
 	}
 
 	public void showUsage() {
@@ -30,7 +30,7 @@ public class CmdLineParser {
 	}
 
 	public Config Parse(String[] args) throws ParseException {
-		Config cfg = new Config();
+		Config cfg = Config.getInstance();
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd = parser.parse(opts, args);
 
@@ -38,35 +38,35 @@ public class CmdLineParser {
 			showUsage();
 		}
 
+		if (cmd.hasOption('m') && cmd.hasOption('w'))
+			throw new ParseException("You must select master-mode OR worker-mode.");
+
 		// for master mode
 		if (cmd.hasOption('m')) {
 			cfg.isMaster = true;
-			if (cmd.hasOption('j')) {
-				cfg.jarName = cmd.getOptionValue('j');
-			} else {
-				throw new ParseException("You must select your job jar file.");
-			}
+			cfg.jarName = cmd.getOptionValue('m');
 		}
 		// for worker mode
 		else if (cmd.hasOption('w')) {
 			cfg.isMaster = false;
-			if (cmd.hasOption('h')) {
-				String ipaddr = cmd.getOptionValue('h');
-				try {
-					InetAddress addr = InetAddress.getByName(ipaddr);
-				} catch (UnknownHostException e) {
-					throw new ParseException("Please check your master IP addr.");
-				}
-			} else {
-				throw new ParseException("Select your master IP addr.");
+			String ipaddr = cmd.getOptionValue('w');
+			try {
+				cfg.host = InetAddress.getByName(ipaddr);
+			} catch (UnknownHostException e) {
+				throw new ParseException("Please check your master IP address/port.");
 			}
 		} else {
 			throw new ParseException("You must select master or worker mode.");
 		}
 
-		if (cmd.hasOption('p')) {
-			cfg.port = Integer.parseInt(cmd.getOptionValue('p', Integer.toString(Constants.PORT)));
+		if (!cfg.isMaster) {
+			cfg.remote_port = Integer.parseInt(cmd.getOptionValue("r", Integer.toString(Constants.PORT)));
 		}
+
+		cfg.local_port = Integer.parseInt(cmd.getOptionValue("l", Integer.toString(Constants.PORT)));
+		cfg.isDebug = cmd.hasOption("d");
+
+		Utils.debugPrint(cfg.toString());
 
 		return cfg;
 	}

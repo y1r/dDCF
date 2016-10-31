@@ -1,5 +1,6 @@
 package dDCF;
 
+import dDCF.InterConnects.InterConnects;
 import dDCF.Utils.CmdLineParser;
 import dDCF.Utils.Config;
 import org.apache.commons.cli.ParseException;
@@ -17,7 +18,9 @@ public class main {
 			return;
 		}
 
+		InterConnects cons = new InterConnects(cfg);
 
-        return;
+
+		return;
 	}
 }
