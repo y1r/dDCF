@@ -5,6 +5,8 @@ import dDCF.Utils.CmdLineParser;
 import dDCF.Utils.Config;
 import org.apache.commons.cli.ParseException;
 
+import java.io.IOException;
+
 public class main {
 	public static void main(String[] args) {
 		Config cfg = null;
@@ -18,8 +20,10 @@ public class main {
 			return;
 		}
 
-		InterConnects cons = new InterConnects(cfg);
-
+		try {
+			InterConnects cons = new InterConnects(cfg);
+		} catch (IOException e) {
+		}
 
 		return;
 	}

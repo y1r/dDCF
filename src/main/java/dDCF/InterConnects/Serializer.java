@@ -16,12 +16,13 @@ public class Serializer {
 	void writeMessageToStream(DataOutputStream stream, Message msg) throws IOException {
 		byte[] packedMsg = objectMapper.writeValueAsBytes(msg);
 
-		stream.write(packedMsg.length);
+		stream.writeInt(packedMsg.length);
 		stream.write(packedMsg);
 	}
 
 	Message readMessageFromStream(DataInputStream stream) throws IOException {
 		int msgLen = stream.readInt();
+		System.out.println(msgLen);
 		byte[] packedMsg = new byte[msgLen];
 
 		int ret;

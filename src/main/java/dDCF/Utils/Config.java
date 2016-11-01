@@ -4,12 +4,12 @@ import java.net.InetAddress;
 
 public class Config {
 	private static Config _instance;
-	boolean isMaster;
-	String jarName = null;
-	InetAddress host;
-	int remote_port;
-	int local_port;
-	boolean isDebug;
+	public boolean isMaster;
+	public String jarName = null;
+	public InetAddress host;
+	public int remote_port;
+	public int local_port;
+	public boolean isDebug;
 
 	private Config() {
 	}
