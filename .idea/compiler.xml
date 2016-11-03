@@ -21,6 +21,10 @@
     <bytecodeTargetLevel>
       <module name="dDCF_main" target="1.8" />
       <module name="dDCF_test" target="1.8" />
+      <module name="lib_main" target="1.8" />
+      <module name="lib_test" target="1.8" />
+      <module name="task_main" target="1.8" />
+      <module name="task_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

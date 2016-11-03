@@ -3,8 +3,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dDCF.iml" filepath="$PROJECT_DIR$/.idea/modules/dDCF.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dDCF_main.iml" filepath="$PROJECT_DIR$/.idea/modules/dDCF_main.iml" group="dDCF" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dDCF_test.iml" filepath="$PROJECT_DIR$/.idea/modules/dDCF_test.iml" group="dDCF" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/lib.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/lib.iml" group="lib" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/lib_main.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/lib_main.iml" group="lib" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/lib_test.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/lib_test.iml" group="lib" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/task/task.iml" filepath="$PROJECT_DIR$/.idea/modules/task/task.iml" group="task" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/task/task_main.iml" filepath="$PROJECT_DIR$/.idea/modules/task/task_main.iml" group="task" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/task/task_test.iml" filepath="$PROJECT_DIR$/.idea/modules/task/task_test.iml" group="task" />
     </modules>
   </component>
 </project>

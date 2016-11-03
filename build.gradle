@@ -1,20 +1,33 @@
-apply plugin: 'java'
-apply plugin: 'application'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile 'commons-cli:commons-cli:1.3.1'
-    compile 'org.msgpack:jackson-dataformat-msgpack:0.8.11'
-}
-
-jar {
-    manifest {
-        attributes 'Main-Class': 'dDCF.main'
+subprojects {
+    repositories {
+        mavenCentral()
     }
-    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
+project(':lib') {
+    apply plugin: 'java'
+
+    dependencies {
+        compile 'commons-cli:commons-cli:1.3.1'
+        compile 'org.msgpack:jackson-dataformat-msgpack:0.8.11'
+    }
+
+    jar {
+        manifest {
+            attributes 'Main-Class': 'dDCF.main'
+        }
+        from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+project(':task') {
+    apply plugin: 'java'
+
+    dependencies {
+        compile project(':lib')
+    }
+
+    jar {
+        from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
