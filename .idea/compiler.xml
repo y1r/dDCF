@@ -23,6 +23,10 @@
       <module name="dDCF_test" target="1.8" />
       <module name="lib_main" target="1.8" />
       <module name="lib_test" target="1.8" />
+      <module name="Runtime_main" target="1.8" />
+      <module name="runtime_main" target="1.8" />
+      <module name="Runtime_test" target="1.8" />
+      <module name="runtime_test" target="1.8" />
       <module name="task_main" target="1.8" />
       <module name="task_test" target="1.8" />
     </bytecodeTargetLevel>

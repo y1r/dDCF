@@ -1,4 +1,5 @@
 rootProject.name = 'dDCF'
 
-include "lib"
-include 'task'
+include ":lib"
+include ':task'
+include ':runtime'
