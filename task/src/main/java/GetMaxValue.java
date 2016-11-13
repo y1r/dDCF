@@ -1,13 +1,30 @@
 import dDCF.lib.Task;
+import dDCF.lib.TaskDeque;
 import dDCF.lib.Tasks;
 import dDCF.lib.Work;
 
 import java.util.Random;
 
 public class GetMaxValue implements Work {
-	@Override
-	public void main() {
+	Task t = null;
 
+	@Override
+	public void starter() {
+		t = new Task<>(null, this::start, null);
+		TaskDeque.appendTask(t);
+	}
+
+	public void ender() {
+		System.out.println("ender");
+	}
+
+	Object start(Object t) {
+		main();
+
+		return null;
+	}
+
+	public void main() {
 		Integer[] value = new Integer[10000000];
 
 		Random random = new Random();
@@ -32,11 +49,16 @@ public class GetMaxValue implements Work {
 
 		Hoge hoge = new Hoge();
 
+		/*
+		long start = System.currentTimeMillis();
+		hoge.show("Max: " + getMax2(new data(value, 0, value.length - 1)));
+		long end = System.currentTimeMillis();
+		System.out.println("seq:" + (end - start) + "ms");
+*/
 		long start = System.currentTimeMillis();
 		hoge.show("Max: " + getMax3(new data(value, 0, value.length - 1)));
 		long end = System.currentTimeMillis();
-		System.out.println((end - start) + "ms");
-
+		System.out.println("par:" + (end - start) + "ms");
 	}
 
 	Integer getMax2(data data) {
@@ -55,7 +77,10 @@ public class GetMaxValue implements Work {
 	Integer getMax3(data data) {
 		if (data.start - data.end == 0) return data.array[data.start];
 
+		if (data.end - data.start <= 1000000) return getMax2(data);
+
 		int mid = data.start + (data.end - data.start) / 2;
+//		System.out.flush();
 
 		Tasks<data, Integer> tasks = new Tasks<>();
 		Task<data, Integer> task1 = new Task<>(tasks, this::getMax3, new data(data.array, data.start, mid));

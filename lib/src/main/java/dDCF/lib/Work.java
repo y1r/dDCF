@@ -1,5 +1,7 @@
 package dDCF.lib;
 
 public interface Work {
-	void main();
+	void starter();
+
+	void ender();
 }

@@ -3,11 +3,11 @@ package dDCF.lib;
 import java.util.function.Function;
 
 public class Task<InputType, ResultType> {
+	public Tasks parentTasks;
 	private Function<InputType, ResultType> function;
 	private InputType input;
 	private ResultType result = null;
 	private boolean ended = false;
-	private Tasks parentTasks;
 
 	public Task(Tasks tasks, Function<InputType, ResultType> func, InputType in) {
 		function = func;

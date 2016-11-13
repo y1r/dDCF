@@ -1,28 +1,48 @@
 package dDCF.lib.internal;
 
 import dDCF.lib.Task;
+import dDCF.lib.TaskDeque;
 
 public class Worker extends Thread {
-	private Worker() {
+	public Worker() {
 	}
 
 	public static Thread getInfiniteWorker() {
 		Thread th = new Thread(() ->
 		{
-			while (true) {
-				try {
-					Task task = TaskDeque.deque.takeFirst(); // TODO: first or last?
-					work(task);
-				} catch (InterruptedException e) {
-				}
-			}
+			TaskDeque taskDeque = new TaskDeque();
+			work();
 		});
 
 		return th;
 	}
 
-	public static void work(Task task) {
-		task.execute();
-		CompletedTasks.completeTask(task);
+	public static void startWorkers() {
+		int node = Runtime.getRuntime().availableProcessors();
+		System.out.println("nodes:" + node);
+		Thread[] workers = new Thread[node];
+
+		for (int i = 0; i < workers.length; i++) {
+			workers[i] = Worker.getInfiniteWorker();
+			workers[i].start();
+		}
+
+		for (int i = 0; i < workers.length; i++) {
+			try {
+				workers[i].join();
+			} catch (InterruptedException e) {
+			}
+		}
+	}
+
+	public static void work() {
+		while (true) {
+			Task t = TaskDeque.pollLast();
+			if (t == null) {
+				t = TaskDeque.steal();
+				if (t == null) return;
+			}
+			t.execute();
+		}
 	}
 }

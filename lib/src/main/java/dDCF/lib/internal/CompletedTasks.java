@@ -10,6 +10,6 @@ public class CompletedTasks {
 	private static List<Task> completed = Collections.synchronizedList(new ArrayList<>());
 
 	public static void completeTask(Task task) {
-
+//		task.parentTasks.notifyAll();
 	}
 }

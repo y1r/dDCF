@@ -1,6 +1,6 @@
 package dDCF.runtime.InterConnects;
 
-import dDCF.runtime.Utils.Pair;
+import dDCF.lib.internal.Pair;
 import dDCF.runtime.Utils.Utils;
 
 import java.net.InetAddress;

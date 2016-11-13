@@ -1,4 +1,4 @@
-package dDCF.runtime.Utils;
+package dDCF.lib.internal;
 
 public class Pair<T, U> {
 	public T first;
