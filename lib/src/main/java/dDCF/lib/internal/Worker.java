@@ -11,14 +11,14 @@ public class Worker extends Thread {
 		Thread th = new Thread(() ->
 		{
 			TaskDeque taskDeque = new TaskDeque();
-			work();
+			workInfinitely();
 		});
 
 		return th;
 	}
 
 	public static void startWorkers() {
-		int node = Runtime.getRuntime().availableProcessors();
+		int node = Config.getInstance().threads;
 		System.out.println("nodes:" + node);
 		Thread[] workers = new Thread[node];
 
@@ -41,6 +41,17 @@ public class Worker extends Thread {
 			if (t == null) {
 				t = TaskDeque.steal();
 				if (t == null) return;
+			}
+			t.execute();
+		}
+	}
+
+	private static void workInfinitely() {
+		while (true) {
+			Task t = TaskDeque.pollLast();
+			if (t == null) {
+				t = TaskDeque.steal();
+				if (t == null) continue;
 			}
 			t.execute();
 		}

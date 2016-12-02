@@ -1,5 +1,6 @@
 package dDCF.runtime.Utils;
 
+import dDCF.lib.internal.Config;
 import org.apache.commons.cli.*;
 
 import java.net.InetAddress;
@@ -20,13 +21,14 @@ public class CmdLineParser {
 
 		// common options
 		opts.addOption("l", "local-port", true, "Select your local port number.");
+		opts.addOption("t", "threads", true, "Select number of available threads");
 		opts.addOption("h", "help", false, "Show usage.");
 		opts.addOption("d", "debug", false, "Debug mode");
 	}
 
 	public void showUsage() {
 		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("dDCF.jar", opts);
+		formatter.printHelp("runtime.jar", opts);
 	}
 
 	public Config Parse(String[] args) throws ParseException {
@@ -64,6 +66,7 @@ public class CmdLineParser {
 		}
 
 		cfg.local_port = Integer.parseInt(cmd.getOptionValue("l", Integer.toString(Constants.PORT)));
+		cfg.threads = Integer.parseInt(cmd.getOptionValue("t", Integer.toString(Runtime.getRuntime().availableProcessors())));
 		cfg.isDebug = cmd.hasOption("d");
 
 		Utils.debugPrint(cfg.toString());

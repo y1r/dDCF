@@ -1,5 +1,7 @@
 apply plugin: 'java'
 
+defaultTasks ':runtime:jar', ':task:jar'
+
 subprojects {
     apply plugin: 'java'
 

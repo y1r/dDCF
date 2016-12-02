@@ -1,4 +1,4 @@
-package dDCF.runtime.Utils;
+package dDCF.lib.internal;
 
 import java.net.InetAddress;
 
@@ -10,6 +10,7 @@ public class Config {
 	public int remote_port;
 	public int local_port;
 	public boolean isDebug;
+	public int threads;
 
 	private Config() {
 	}
@@ -34,6 +35,7 @@ public class Config {
 
 		stringBuilder.append("remote_port:" + remote_port + " ");
 		stringBuilder.append("local_port:" + local_port + " ");
+		stringBuilder.append("threads:" + threads + " ");
 		stringBuilder.append("isDebug:" + isDebug);
 
 		return stringBuilder.toString();

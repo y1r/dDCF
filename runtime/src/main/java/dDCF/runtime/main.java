@@ -1,9 +1,9 @@
 package dDCF.runtime;
 
 import dDCF.lib.Work;
+import dDCF.lib.internal.Config;
 import dDCF.lib.internal.Worker;
 import dDCF.runtime.Utils.CmdLineParser;
-import dDCF.runtime.Utils.Config;
 import dDCF.runtime.Utils.Reflection;
 import org.apache.commons.cli.ParseException;
 
@@ -37,9 +37,7 @@ public class main {
 				return;
 			} else {
 				work.starter();
-
 				Worker.startWorkers();
-
 				work.ender();
 			}
 		} else {

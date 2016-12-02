@@ -1,6 +1,6 @@
 package dDCF.runtime.InterConnects;
 
-import dDCF.runtime.Utils.Config;
+import dDCF.lib.internal.Config;
 import dDCF.runtime.Utils.Utils;
 
 import java.io.IOException;
