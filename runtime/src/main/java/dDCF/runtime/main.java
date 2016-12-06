@@ -7,6 +7,8 @@ import dDCF.runtime.Utils.CmdLineParser;
 import dDCF.runtime.Utils.Reflection;
 import org.apache.commons.cli.ParseException;
 
+import java.io.IOException;
+
 public class main {
 	public static void main(String[] args) {
 		Config cfg = null;
@@ -28,17 +30,21 @@ public class main {
 		*/
 
 		if (cfg.isMaster) {
-			// TODO: read jar and execute
+			try {
+				Object[] works = Reflection.getWork(cfg.jarName).toArray();
 
-			Work work = Reflection.getWork(cfg.jarName);
-
-			if (work == null) {
-				System.out.println("Couldn't find valid class");
-				return;
-			} else {
-				work.starter();
-				Worker.startWorkers();
-				work.ender();
+				if (works.length != 0) {
+					for (Object obj : works) {
+						Work work = (Work) obj;
+						work.starter();
+						Worker.startWorkers();
+						work.ender();
+					}
+				} else {
+					System.out.println("Couldn't find valid work.");
+				}
+			} catch (IOException e) {
+				System.out.println(e.toString());
 			}
 		} else {
 			Worker.startWorkers();

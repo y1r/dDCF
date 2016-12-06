@@ -2,58 +2,40 @@ package dDCF.runtime.Utils;
 
 import dDCF.lib.Work;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 public class Reflection {
-	public static Work getWork(String jarName) {
-		List<String> classNames = getClassNamesFromJar(jarName);
-		if (classNames == null) return null;
+	public static Stream<Work> getWork(String jarName) throws IOException {
+		FileInputStream fileInputStream;
 
-		URLClassLoader loader = null;
-		try {
-			File jar = new File(jarName);
-			loader = new URLClassLoader(new URL[]{jar.toURI().toURL()});
-		} catch (MalformedURLException e) {
-			System.out.println("Converting jar-path to URL Error:" + e.toString());
-		}
+		fileInputStream = new FileInputStream(jarName);
 
-		Work work = null;
-		for (String className : classNames) {
-			try {
-				Work test = (Work) loader.loadClass(className.substring(0, className.length() - 6).replace('/', '.')).newInstance();
-				if (test != null) work = test;
-			} catch (Exception e) {
-			}
-		}
+		JarByteClassLoader jarByteClassLoader = new JarByteClassLoader(fileInputStream);
+		Stream<String> stringStream = jarByteClassLoader.ClassNameStream();
 
-		return work;
-	}
+		Stream<String> works = stringStream.filter(s ->
+				{
+					Class testClass = jarByteClassLoader.findClass(s);
+					Class[] interfaces = testClass.getInterfaces();
 
-	static List<String> getClassNamesFromJar(String jar) {
-		JarFile jarFile = null;
+					return Arrays.stream(interfaces).anyMatch(cls -> cls == Work.class);
+				}
+		);
 
-		try {
-			jarFile = new JarFile(jar);
-		} catch (IOException e) {
-			System.out.println("Opening Jar File Error:" + e.toString());
-			return null;
-		}
-
-		List<String> classNames = new ArrayList<>();
-		for (Enumeration e = jarFile.entries(); e.hasMoreElements(); ) {
-			JarEntry entry = (JarEntry) e.nextElement();
-			classNames.add(entry.getName());
-		}
-
-		return classNames;
+		return works.map(str ->
+				{
+					Work workInstance = null;
+					try {
+						Class work = jarByteClassLoader.findClass(str);
+						workInstance = (Work) work.newInstance();
+					} catch (Exception e) {
+						System.out.println(e.toString());
+					}
+					return workInstance;
+				}
+		);
 	}
 }

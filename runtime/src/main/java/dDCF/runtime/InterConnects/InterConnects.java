@@ -15,6 +15,7 @@ public class InterConnects {
 	LinkedBlockingDeque<Message> linkedBlockingDeque;
 	Thread messageListener;
 	boolean messageListenerWorking;
+	MessageHandler messageHandler = new MessageHandler();
 
 	List<InterConnect> interConnectList;
 
@@ -87,8 +88,7 @@ public class InterConnects {
 			while (messageListenerWorking) {
 				try {
 					Utils.debugPrint("Listener Loop!");
-					Message msg = linkedBlockingDeque.takeFirst();
-					Utils.debugPrint("Listened:" + msg.toString());
+					messageHandler.handle(linkedBlockingDeque.takeFirst());
 				} catch (InterruptedException e) {
 				}
 			}
