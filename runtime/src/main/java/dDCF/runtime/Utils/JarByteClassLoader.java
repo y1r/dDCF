@@ -3,9 +3,7 @@ package dDCF.runtime.Utils;
 import dDCF.lib.internal.Pair;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
@@ -15,20 +13,6 @@ import java.util.stream.Stream;
 public class JarByteClassLoader extends ClassLoader {
 	public byte[] jarByte;
 	public Map<String, Pair<Class, byte[]>> byteCodeClasses = new HashMap<>();
-
-	public JarByteClassLoader(InputStream inputStream) throws IOException {
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-		byte[] buffer = new byte[1000];
-
-		int count;
-		while ((count = inputStream.read(buffer)) > 0) {
-			byteArrayOutputStream.write(buffer, 0, count);
-		}
-
-		jarByte = byteArrayOutputStream.toByteArray();
-		LoadClassesToMap(jarByte);
-	}
 
 	public JarByteClassLoader(byte[] b) throws IOException {
 		jarByte = b;
@@ -40,13 +24,7 @@ public class JarByteClassLoader extends ClassLoader {
 		JarEntry entry;
 		while ((entry = jarInputStream.getNextJarEntry()) != null) {
 			if (entry.getName().endsWith(".class")) {
-				byte buffer[] = new byte[1000];
-				int count;
-				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-				while ((count = jarInputStream.read(buffer, 0, buffer.length)) > 0) {
-					byteArrayOutputStream.write(buffer, 0, count);
-				}
-				byteCodeClasses.put(entry.getName().substring(0, entry.getName().length() - 6).replace('/', '.'), new Pair<>(null, byteArrayOutputStream.toByteArray()));
+				byteCodeClasses.put(entry.getName().substring(0, entry.getName().length() - 6).replace('/', '.'), new Pair<>(null, Utils.ReadInputStream(jarInputStream)));
 			}
 		}
 	}
@@ -66,7 +44,7 @@ public class JarByteClassLoader extends ClassLoader {
 		}
 		if (loaded != null) return loaded;
 
-		// check already name is already loaded by this class
+		// check already "name".class is already loaded by this loader
 		if (classes.first != null) return classes.first;
 
 		// define class

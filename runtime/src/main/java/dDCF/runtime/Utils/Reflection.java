@@ -2,18 +2,13 @@ package dDCF.runtime.Utils;
 
 import dDCF.lib.Work;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class Reflection {
-	public static Stream<Work> getWork(String jarName) throws IOException {
-		FileInputStream fileInputStream;
-
-		fileInputStream = new FileInputStream(jarName);
-
-		JarByteClassLoader jarByteClassLoader = new JarByteClassLoader(fileInputStream);
+	public static Stream<Work> getWork(byte[] jarByteCode) throws IOException {
+		JarByteClassLoader jarByteClassLoader = new JarByteClassLoader(jarByteCode);
 		Stream<String> stringStream = jarByteClassLoader.ClassNameStream();
 
 		Stream<String> works = stringStream.filter(s ->

@@ -5,6 +5,7 @@ import dDCF.lib.internal.Config;
 import dDCF.lib.internal.Worker;
 import dDCF.runtime.Utils.CmdLineParser;
 import dDCF.runtime.Utils.Reflection;
+import dDCF.runtime.Utils.Utils;
 import org.apache.commons.cli.ParseException;
 
 import java.io.IOException;
@@ -22,6 +23,15 @@ public class main {
 			return;
 		}
 
+		// cache jar file
+		if (cfg.isMaster) {
+			try {
+				cfg.jarByteCode = Utils.ReadFile(cfg.jarName);
+			} catch (IOException e) {
+				System.out.println("Jar File Reading Error: " + e.getMessage());
+			}
+		}
+
 		/*
 		try {
 			InterConnects cons = new InterConnects(cfg);
@@ -31,7 +41,7 @@ public class main {
 
 		if (cfg.isMaster) {
 			try {
-				Object[] works = Reflection.getWork(cfg.jarName).toArray();
+				Object[] works = Reflection.getWork(cfg.jarByteCode).toArray();
 
 				if (works.length != 0) {
 					for (Object obj : works) {

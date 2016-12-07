@@ -6,6 +6,7 @@ public class Config {
 	private static Config _instance;
 	public boolean isMaster;
 	public String jarName = null;
+	public byte[] jarByteCode = null;
 	public InetAddress host;
 	public int remote_port;
 	public int local_port;
