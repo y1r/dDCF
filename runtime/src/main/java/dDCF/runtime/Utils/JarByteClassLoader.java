@@ -23,7 +23,9 @@ public class JarByteClassLoader extends ClassLoader {
 		JarInputStream jarInputStream = new JarInputStream(new ByteArrayInputStream(b));
 		JarEntry entry;
 		while ((entry = jarInputStream.getNextJarEntry()) != null) {
+			// exclude directories
 			if (entry.getName().endsWith(".class")) {
+				// convert foo/bar/sample.class to foo.bar.sample
 				byteCodeClasses.put(entry.getName().substring(0, entry.getName().length() - 6).replace('/', '.'), new Pair<>(null, Utils.ReadInputStream(jarInputStream)));
 			}
 		}

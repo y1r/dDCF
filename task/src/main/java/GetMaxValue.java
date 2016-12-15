@@ -1,8 +1,17 @@
-/*
-public class GetMaxValue implements Work {
-	Task t = null;
+import dDCF.lib.Task;
+import dDCF.lib.TaskDeque;
+import dDCF.lib.Tasks;
 
-	@Override
+import java.util.Random;
+import java.util.Scanner;
+import java.util.function.Function;
+
+public class GetMaxValue {
+	Task t = null;
+	Integer[] value = null;
+	private int length;
+
+	//@Override
 	public void starter() {
 		t = new Task<>(null, this::start, null);
 		TaskDeque.appendTask(t);
@@ -37,28 +46,25 @@ public class GetMaxValue implements Work {
 		System.out.println("optimize finish");
 
 		long time = 0;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 100; i++) {
 //			TaskDeque.reset();
 			time += main(this::getMax3);
 			System.out.print('.');
 		}
 		System.out.println();
-		System.out.println("getMax3:" + time / 10.0);
+		System.out.println("getMax3:" + time / 100.0);
 
 		time = 0;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 100; i++) {
 //			TaskDeque.reset();
 			time += main(this::getMax2);
 			System.out.print('.');
 		}
 		System.out.println();
-		System.out.println("getMax2:" + time / 10.0);
+		System.out.println("getMax2:" + time / 100.0);
 
 		return null;
 	}
-
-	private int length;
-	Integer[] value = null;
 
 	public long main(Function<Data, Integer> func) {
 		long start = System.currentTimeMillis();
@@ -150,4 +156,3 @@ public class GetMaxValue implements Work {
 		}
 	}
 }
-*/

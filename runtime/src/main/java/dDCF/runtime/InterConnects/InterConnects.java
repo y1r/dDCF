@@ -34,6 +34,7 @@ public class InterConnects {
 		startReceiver(cfg.local_port);
 		startMessageListener();
 
+		/* send test message */
 		if (!cfg.isMaster) {
 			Utils.debugPrint("SEND_START");
 			Message msg = new Message();

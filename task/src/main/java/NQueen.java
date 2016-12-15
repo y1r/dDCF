@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class NQueen implements Work {
+	//public class NQueen {
 	Task t = null;
 
 	@Override
@@ -83,16 +84,16 @@ public class NQueen implements Work {
 		int[] init = new int[0];
 
 		System.out.println("optimize start");
-		for (int i = 1; i < N; i++) {
-			NQueen1(i, init);
-			NQueen2(new NQueenData(i, init));
+		for (int i = 0; i < 10; i++) {
+			NQueen1(N, init);
+			NQueen2(new NQueenData(N, init));
 			System.out.print('.');
 		}
 		System.out.println();
 		System.out.println("optimize finish");
 
 		long time = 0;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 100; i++) {
 			long start = System.currentTimeMillis();
 			NQueen1(N, init);
 			long end = System.currentTimeMillis();
@@ -100,10 +101,10 @@ public class NQueen implements Work {
 			System.out.print('.');
 		}
 		System.out.println();
-		System.out.println("NQueen1:" + time / 10.0);
+		System.out.println("NQueen1:" + time / 100.0);
 
 		time = 0;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 100; i++) {
 			long start = System.currentTimeMillis();
 			NQueen2(new NQueenData(N, init));
 			long end = System.currentTimeMillis();
@@ -111,7 +112,7 @@ public class NQueen implements Work {
 			System.out.print('.');
 		}
 		System.out.println();
-		System.out.println("NQueen2:" + time / 10.0);
+		System.out.println("NQueen2:" + time / 100.0);
 
 		return null;
 	}

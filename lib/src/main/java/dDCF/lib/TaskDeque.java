@@ -13,7 +13,6 @@ public class TaskDeque {
 	private static ConcurrentHashMap<Long, TaskDeque> taskDequeHashMap = new ConcurrentHashMap<>();
 	private static Random rnd = new Random();
 	private LinkedBlockingDeque<Task> deque = new LinkedBlockingDeque<>();
-//	private int fail = 0;
 
 	public TaskDeque() {
 		List<Task> tmpTaskList = new ArrayList<>();
@@ -58,20 +57,7 @@ public class TaskDeque {
 			if (t != null) return t;
 		}
 
-//		getCurrentTaskDeque().fail++;
-
 		return null;
-	}
-
-	public static void reset() {
-		Enumeration<TaskDeque> enumeration = taskDequeHashMap.elements();
-/*
-		while (enumeration.hasMoreElements()) {
-			TaskDeque taskDeque = enumeration.nextElement();
-			System.out.println(taskDeque.fail);
-			taskDeque.fail = 0;
-		}
-		*/
 	}
 
 	private void append(Task t) {
