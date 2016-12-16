@@ -21,7 +21,9 @@ enum MESSAGE_TYPE {
 public class Message {
 	// ALL VARIABLES MUST BE 'PUBLIC'
 
+	// common
 	public MESSAGE_TYPE messageType;
+	public long sequenceCode;
 
 	// NODE_OFFER
 	public List<Pair<InetAddress, Integer>> nodesOffer;
@@ -40,10 +42,6 @@ public class Message {
 
 	public Message() {
 		messageType = MESSAGE_TYPE.UNDEFINED;
-	}
-
-	public Message(MESSAGE_TYPE type) {
-		messageType = type;
 	}
 
 	@Override

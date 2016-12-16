@@ -1,8 +1,7 @@
 package dDCF.runtime;
 
-import dDCF.lib.Work;
 import dDCF.lib.internal.Config;
-import dDCF.lib.internal.Worker;
+import dDCF.runtime.InterConnects.InterConnects;
 import dDCF.runtime.Utils.CmdLineParser;
 import dDCF.runtime.Utils.Reflection;
 import dDCF.runtime.Utils.Utils;
@@ -23,7 +22,7 @@ public class main {
 			return;
 		}
 
-		// cache jar file
+		// cache jar file (master)
 		if (cfg.isMaster) {
 			try {
 				cfg.jarByteCode = Utils.ReadFile(cfg.jarName);
@@ -32,17 +31,20 @@ public class main {
 			}
 		}
 
-		/*
-		try {
-			InterConnects cons = new InterConnects(cfg);
-		} catch (IOException e) {
-		}
-		*/
 
+		InterConnects cons;
+		try {
+			cons = new InterConnects(cfg);
+		} catch (IOException e) {
+			Utils.debugPrint("InterConnects IOException." + e.getMessage());
+			return;
+		}
+
+		// master's work
 		if (cfg.isMaster) {
 			try {
 				Object[] works = Reflection.getWork(cfg.jarByteCode).toArray();
-
+/*
 				if (works.length != 0) {
 					for (Object obj : works) {
 						Work work = (Work) obj;
@@ -53,11 +55,19 @@ public class main {
 				} else {
 					System.out.println("Couldn't find valid work.");
 				}
+				*/
 			} catch (IOException e) {
 				System.out.println(e.toString());
 			}
-		} else {
-			Worker.startWorkers();
+		}
+
+		// worker's work
+		if (!cfg.isMaster) {
+			byte[] jarCode = cons.getJarCode();
+			cfg.jarByteCode = jarCode;
+
+			if (jarCode == null) System.out.println("failed getJarCode");
+			else System.out.println("jarCode:" + jarCode.length);
 		}
 
 		return;

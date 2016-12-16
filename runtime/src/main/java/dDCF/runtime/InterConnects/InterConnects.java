@@ -9,32 +9,26 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingDeque;
 
 public class InterConnects {
-	LinkedBlockingDeque<Message> linkedBlockingDeque;
-	Thread messageListener;
-	boolean messageListenerWorking;
-	MessageHandler messageHandler = new MessageHandler();
-
 	List<InterConnect> interConnectList;
 
-	ServerSocket receiver;
-	Thread receiveThread;
-	boolean receiverWorking;
+	// accepter : accepter is an accept loop, it handles NEW connection.
+	ServerSocket accepter;
+	Thread acceptThread;
+	boolean accepterWorking;
 
 	public InterConnects(Config cfg) throws IOException {
-		linkedBlockingDeque = new LinkedBlockingDeque<>();
 		interConnectList = new ArrayList<>();
 
 		if (!cfg.isMaster) {
 			appendAddress(cfg.host, cfg.remote_port);
 		}
 
-		startReceiver(cfg.local_port);
-		startMessageListener();
+		startAccepter(cfg.local_port);
 
 		/* send test message */
+		/*
 		if (!cfg.isMaster) {
 			Utils.debugPrint("SEND_START");
 			Message msg = new Message();
@@ -46,18 +40,19 @@ public class InterConnects {
 			}
 			Utils.debugPrint("SEND_DONE");
 		}
+		*/
 	}
 
-	private void startReceiver(int port) throws IOException {
-		receiver = new ServerSocket(port);
+	private void startAccepter(int port) throws IOException {
+		accepter = new ServerSocket(port);
 
-		receiverWorking = true;
-		receiveThread = new Thread(() ->
+		accepterWorking = true;
+		acceptThread = new Thread(() ->
 		{
-			while (receiverWorking) {
+			while (accepterWorking) {
 				try {
 					Utils.debugPrint("Accept Loop!");
-					Socket socket = receiver.accept();
+					Socket socket = accepter.accept();
 					Utils.debugPrint("Accepted[" + interConnectList.size() + "]:" + socket.getInetAddress().toString());
 					appendSocket(socket);
 				} catch (IOException e) {
@@ -65,11 +60,11 @@ public class InterConnects {
 			}
 		}
 		);
-		receiveThread.start();
+		acceptThread.start();
 	}
 
-	private void stopReceiver() {
-		receiverWorking = false;
+	private void stopAccepter() {
+		accepterWorking = false;
 	}
 
 	private void appendAddress(InetAddress inetAddress, int port) throws IOException {
@@ -78,27 +73,18 @@ public class InterConnects {
 	}
 
 	private void appendSocket(Socket sock) throws IOException {
-		InterConnect interConnect = new InterConnect(sock, linkedBlockingDeque);
+		InterConnect interConnect = new InterConnect(sock);
 		interConnectList.add(interConnect);
 	}
 
-	private void startMessageListener() {
-		messageListenerWorking = true;
-		messageListener = new Thread(() ->
-		{
-			while (messageListenerWorking) {
-				try {
-					Utils.debugPrint("Listener Loop!");
-					messageHandler.handle(linkedBlockingDeque.takeFirst());
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-		);
-		messageListener.start();
-	}
+	public byte[] getJarCode() {
+		for (InterConnect interConnect : interConnectList) {
+			byte[] byteCode = interConnect.getJarCode();
 
-	private void stopMessageListener() {
-		messageListenerWorking = false;
+			if (byteCode != null)
+				return byteCode;
+		}
+
+		return null;
 	}
 }
