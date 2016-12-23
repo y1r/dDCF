@@ -2,14 +2,18 @@ package dDCF.lib.internal;
 
 import dDCF.lib.Task;
 import dDCF.lib.TaskDeque;
+import dDCF.lib.internal.InterConnects.InterConnects;
 
 public class Worker extends Thread {
+	private static InterConnects interConnects;
+
 	public Worker() {
 	}
 
 	public static Thread getInfiniteWorker() {
 		Thread th = new Thread(() ->
 		{
+			// identify by Thread-Id
 			TaskDeque taskDeque = new TaskDeque();
 			workInfinitely();
 		});
@@ -17,7 +21,9 @@ public class Worker extends Thread {
 		return th;
 	}
 
-	public static void startWorkers() {
+	public static void startWorkers(InterConnects ics) {
+		interConnects = ics;
+
 		int node = Config.getInstance().threads;
 		System.out.println("nodes:" + node);
 		Thread[] workers = new Thread[node];
@@ -38,22 +44,29 @@ public class Worker extends Thread {
 	public static void work() {
 		while (true) {
 			Task t = TaskDeque.pollLast();
-			if (t == null) {
-				t = TaskDeque.steal();
-				if (t == null) return;
+			if (t != null) {
+				t.execute();
+				continue;
 			}
-			t.execute();
+
+			t = TaskDeque.steal();
+			if (t != null) {
+				t.execute();
+				continue;
+			}
+
+			return;
 		}
 	}
 
 	private static void workInfinitely() {
 		while (true) {
-			Task t = TaskDeque.pollLast();
-			if (t == null) {
-				t = TaskDeque.steal();
-				if (t == null) continue;
+			work();
+			Pair<Long, Task> t = interConnects.stealTask();
+			if (t != null && t.second != null) {
+				t.second.execute();
+				interConnects.returnTask(t);
 			}
-			t.execute();
 		}
 	}
 }

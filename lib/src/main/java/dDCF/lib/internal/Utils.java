@@ -1,6 +1,4 @@
-package dDCF.runtime.Utils;
-
-import dDCF.lib.internal.Config;
+package dDCF.lib.internal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;

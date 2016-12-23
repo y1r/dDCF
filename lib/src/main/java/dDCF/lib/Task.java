@@ -1,18 +1,24 @@
 package dDCF.lib;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+import java.io.Serializable;
 import java.util.function.Function;
 
-public class Task<InputType, ResultType> {
-	public Tasks parentTasks;
-	private Function<InputType, ResultType> function;
-	private InputType input;
-	private ResultType result = null;
-	private boolean ended = false;
+public class Task {
+	@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXTERNAL_PROPERTY)
+	public Function<Serializable, Serializable> function;
 
-	public Task(Tasks tasks, Function<InputType, ResultType> func, InputType in) {
+	public Serializable input;
+	public Serializable result = null;
+	public boolean ended = false;
+
+	public Task() {
+	}
+
+	public Task(Function<Serializable, Serializable> func, Serializable in) {
 		function = func;
 		input = in;
-		parentTasks = tasks;
 	}
 
 	boolean isEnded() {
@@ -24,7 +30,12 @@ public class Task<InputType, ResultType> {
 		ended = true;
 	}
 
-	public ResultType getResult() {
+	public Serializable getResult() {
 		return result;
+	}
+
+	public void setResult(Serializable t) {
+		result = t;
+		ended = true;
 	}
 }

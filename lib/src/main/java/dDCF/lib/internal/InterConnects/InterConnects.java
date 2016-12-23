@@ -1,7 +1,9 @@
-package dDCF.runtime.InterConnects;
+package dDCF.lib.internal.InterConnects;
 
+import dDCF.lib.Task;
 import dDCF.lib.internal.Config;
-import dDCF.runtime.Utils.Utils;
+import dDCF.lib.internal.Pair;
+import dDCF.lib.internal.Utils;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -9,6 +11,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InterConnects {
 	List<InterConnect> interConnectList;
@@ -17,6 +21,10 @@ public class InterConnects {
 	ServerSocket accepter;
 	Thread acceptThread;
 	boolean accepterWorking;
+
+	// steal
+	Random rnd = new Random();
+	ConcurrentHashMap<Long, Pair<Integer, Long>> taskKeyToInterConnectKeyPair = new ConcurrentHashMap<>();
 
 	public InterConnects(Config cfg) throws IOException {
 		interConnectList = new ArrayList<>();
@@ -87,4 +95,31 @@ public class InterConnects {
 
 		return null;
 	}
+
+	public Pair<Long, Task> stealTask() {
+//		Utils.debugPrint("stealTask");
+		for (int i = 0; i < interConnectList.size(); i++) {
+			Pair<Long, Task> taskPair = interConnectList.get(i).stealTask();
+			if (taskPair == null) continue;
+
+			long key = rnd.nextLong();
+
+			taskKeyToInterConnectKeyPair.put(key, new Pair<>(i, taskPair.first));
+
+			taskPair.first = key;
+
+//			Utils.debugPrint("return");
+			return taskPair;
+		}
+//		Utils.debugPrint("null");
+
+		return null;
+	}
+
+	public void returnTask(Pair<Long, Task> task) {
+		Pair<Integer, Long> keyPair = taskKeyToInterConnectKeyPair.remove(task.first);
+
+		interConnectList.get(keyPair.first).returnTask(new Pair<>(keyPair.second, task.second));
+	}
+
 }

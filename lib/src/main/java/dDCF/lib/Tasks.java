@@ -5,10 +5,10 @@ import dDCF.lib.internal.Worker;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tasks<InputType, ResultType> {
-	List<Task> tasks = new ArrayList<>();
+public class Tasks {
+	public List<Task> tasks = new ArrayList<>();
 
-	public int appendTask(Task<InputType, ResultType> task) {
+	public int appendTask(Task task) {
 		tasks.add(task);
 		TaskDeque.appendTask(task); // add to last
 

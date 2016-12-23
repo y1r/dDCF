@@ -1,6 +1,4 @@
-package dDCF.runtime.Utils;
-
-import dDCF.lib.internal.Pair;
+package dDCF.lib.internal;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -11,12 +9,25 @@ import java.util.jar.JarInputStream;
 import java.util.stream.Stream;
 
 public class JarByteClassLoader extends ClassLoader {
+	private static JarByteClassLoader loader = null;
 	public byte[] jarByte;
 	public Map<String, Pair<Class, byte[]>> byteCodeClasses = new HashMap<>();
 
-	public JarByteClassLoader(byte[] b) throws IOException {
-		jarByte = b;
-		LoadClassesToMap(jarByte);
+	private JarByteClassLoader() {
+	}
+
+	public static JarByteClassLoader getInstance(byte[] b) throws IOException {
+		if (loader == null) {
+			loader = new JarByteClassLoader();
+			loader.jarByte = b;
+			loader.LoadClassesToMap(loader.jarByte);
+		}
+
+		return loader;
+	}
+
+	public static JarByteClassLoader getInstance() {
+		return loader;
 	}
 
 	private void LoadClassesToMap(byte[] b) throws IOException {

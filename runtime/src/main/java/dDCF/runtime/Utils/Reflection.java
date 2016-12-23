@@ -1,6 +1,7 @@
 package dDCF.runtime.Utils;
 
 import dDCF.lib.Work;
+import dDCF.lib.internal.JarByteClassLoader;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -8,7 +9,7 @@ import java.util.stream.Stream;
 
 public class Reflection {
 	public static Stream<Work> getWork(byte[] jarByteCode) throws IOException {
-		JarByteClassLoader jarByteClassLoader = new JarByteClassLoader(jarByteCode);
+		JarByteClassLoader jarByteClassLoader = JarByteClassLoader.getInstance(jarByteCode);
 		Stream<String> stringStream = jarByteClassLoader.ClassNameStream();
 
 		Stream<String> works = stringStream.filter(s ->

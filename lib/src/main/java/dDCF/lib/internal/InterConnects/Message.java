@@ -1,7 +1,8 @@
-package dDCF.runtime.InterConnects;
+package dDCF.lib.internal.InterConnects;
 
 import dDCF.lib.internal.Pair;
-import dDCF.runtime.Utils.Utils;
+import dDCF.lib.internal.SerializedTask;
+import dDCF.lib.internal.Utils;
 
 import java.net.InetAddress;
 import java.util.List;
@@ -32,13 +33,13 @@ public class Message {
 	public byte[] jarByteCode;
 
 	// JOB_OFFER
-	// TODO
+	public SerializedTask task;
 
 	// JOB_RECEIVED
-	// TODO
 
 	// JOB_DONE
-	// TODO
+	// public Task task;
+
 
 	public Message() {
 		messageType = MESSAGE_TYPE.UNDEFINED;
@@ -60,15 +61,14 @@ public class Message {
 				break;
 
 			case JOB_OFFER:
-				// TODO
+				stringBuilder.append("Task: " + ((task == null) ? "null" : "non-null"));
 				break;
 
 			case JOB_RECEIVED:
-				// TODO
 				break;
 
 			case JOB_DONE:
-				// TODO
+				stringBuilder.append("Task: " + ((task == null) ? "null" : "non-null"));
 				break;
 		}
 

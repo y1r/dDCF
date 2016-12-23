@@ -1,10 +1,12 @@
 package dDCF.runtime;
 
+import dDCF.lib.Work;
 import dDCF.lib.internal.Config;
-import dDCF.runtime.InterConnects.InterConnects;
+import dDCF.lib.internal.InterConnects.InterConnects;
+import dDCF.lib.internal.Utils;
+import dDCF.lib.internal.Worker;
 import dDCF.runtime.Utils.CmdLineParser;
 import dDCF.runtime.Utils.Reflection;
-import dDCF.runtime.Utils.Utils;
 import org.apache.commons.cli.ParseException;
 
 import java.io.IOException;
@@ -44,18 +46,18 @@ public class main {
 		if (cfg.isMaster) {
 			try {
 				Object[] works = Reflection.getWork(cfg.jarByteCode).toArray();
-/*
+
 				if (works.length != 0) {
 					for (Object obj : works) {
 						Work work = (Work) obj;
 						work.starter();
-						Worker.startWorkers();
+						Worker.startWorkers(cons);
 						work.ender();
 					}
 				} else {
 					System.out.println("Couldn't find valid work.");
 				}
-				*/
+
 			} catch (IOException e) {
 				System.out.println(e.toString());
 			}
@@ -68,6 +70,13 @@ public class main {
 
 			if (jarCode == null) System.out.println("failed getJarCode");
 			else System.out.println("jarCode:" + jarCode.length);
+
+			try {
+				Object[] works = Reflection.getWork(cfg.jarByteCode).toArray();
+			} catch (IOException e) {
+			}
+
+			Worker.startWorkers(cons);
 		}
 
 		return;

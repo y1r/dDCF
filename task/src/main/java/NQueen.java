@@ -3,6 +3,7 @@ import dDCF.lib.TaskDeque;
 import dDCF.lib.Tasks;
 import dDCF.lib.Work;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,7 @@ public class NQueen implements Work {
 
 	@Override
 	public void starter() {
-		t = new Task<>(null, this::main, null);
+		t = new Task(this::main, null);
 		TaskDeque.appendTask(t);
 	}
 
@@ -77,9 +78,11 @@ public class NQueen implements Work {
 	}
 	*/
 
-	Object main(Object t) {
+	Serializable main(Serializable t) {
 		Scanner scan = new Scanner(System.in);
 		int N = scan.nextInt();
+
+		System.out.println(N);
 
 		int[] init = new int[0];
 
@@ -189,7 +192,8 @@ public class NQueen implements Work {
 		return res;
 	}
 
-	Integer NQueen2(NQueenData data) {
+	Serializable NQueen2(Serializable d) {
+		NQueenData data = (NQueenData) d;
 		// fail-check
 		if (!NQueenCheck(data.N, data.map)) return 0;
 
@@ -204,8 +208,8 @@ public class NQueen implements Work {
 
 		int res = 0;
 
-		Tasks<NQueenData, Integer> tasks = new Tasks<>();
-		List<Task<NQueenData, Integer>> taskList = new ArrayList<>();
+		Tasks tasks = new Tasks();
+		List<Task> taskList = new ArrayList<>();
 
 		for (int i = currentMax + 1; i < data.N * data.N; i++) {
 			int[] newmap = new int[data.map.length + 1];
@@ -214,7 +218,7 @@ public class NQueen implements Work {
 			if (data.map.length > 1)
 				res += NQueen1(data.N, newmap);
 			else {
-				Task<NQueenData, Integer> task = new Task<>(tasks, this::NQueen2, new NQueenData(data.N, newmap));
+				Task task = new Task(this::NQueen2, new NQueenData(data.N, newmap));
 				taskList.add(task);
 				tasks.appendTask(task);
 			}
@@ -222,17 +226,20 @@ public class NQueen implements Work {
 
 		tasks.join();
 
-		int sum = taskList.stream().mapToInt(value -> value.getResult()).sum();
+		int sum = taskList.stream().mapToInt(value -> (Integer) value.getResult()).sum();
 
 		if (res != 0) return res;
 		return sum;
 	}
 
-	class NQueenData {
-		Integer N;
-		int[] map;
+	class NQueenData implements Serializable {
+		public Integer N;
+		public int[] map;
 
-		NQueenData(Integer n, int[] m) {
+		public NQueenData() {
+		}
+
+		public NQueenData(Integer n, int[] m) {
 			N = n;
 			map = m;
 		}

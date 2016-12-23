@@ -1,4 +1,4 @@
-package dDCF.runtime.InterConnects;
+package dDCF.lib.internal.InterConnects;
 
 import java.util.Random;
 
