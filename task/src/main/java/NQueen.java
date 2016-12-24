@@ -2,6 +2,7 @@ import dDCF.lib.Task;
 import dDCF.lib.TaskDeque;
 import dDCF.lib.Tasks;
 import dDCF.lib.Work;
+import dDCF.lib.internal.SerializableFunction;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,15 +14,77 @@ public class NQueen implements Work {
 	//public class NQueen {
 	Task t = null;
 
-	@Override
-	public void starter() {
-		t = new Task(this::main, null);
-		TaskDeque.appendTask(t);
+	static Serializable main(Serializable t) {
+		Scanner scan = new Scanner(System.in);
+		int N = scan.nextInt();
+
+		System.out.println(N);
+
+		int[] init = new int[0];
+
+		System.out.println("optimize start");
+		for (int i = 0; i < 10; i++) {
+			NQueen1(N, init);
+			NQueen2(new NQueenData(N, init));
+			System.out.print('.');
+		}
+		System.out.println();
+		System.out.println("optimize finish");
+
+		long time = 0;
+		for (int i = 0; i < 100; i++) {
+			long start = System.currentTimeMillis();
+			NQueen1(N, init);
+			long end = System.currentTimeMillis();
+			time += end - start;
+			System.out.print('.');
+		}
+		System.out.println();
+		System.out.println("NQueen1:" + time / 100.0);
+
+		time = 0;
+		for (int i = 0; i < 100; i++) {
+			long start = System.currentTimeMillis();
+			NQueen2(new NQueenData(N, init));
+			long end = System.currentTimeMillis();
+			time += end - start;
+			System.out.print('.');
+		}
+		System.out.println();
+		System.out.println("NQueen2:" + time / 100.0);
+
+		return null;
 	}
 
-	@Override
-	public void ender() {
+	static private boolean NQueenCheck(int N, int[] map) {
+		for (int i = 0; i < map.length; i++) {
+			int pos = map[i];
+			for (int j = i + 1; j < map.length && map[j] != -1; j++) {
+				int row = pos / N;
+				int crow = map[j] / N;
 
+				int column = pos % N;
+				int ccolumn = map[j] % N;
+
+				int drow = crow - row;
+				int dcol = ccolumn - column;
+
+
+				// to - right
+				if (drow == 0) return false;
+
+				// to - down
+				if (dcol == 0) return false;
+
+				// left-down
+				if (drow == dcol) return false;
+
+				// to - right-down
+				if (drow == -dcol) return false;
+			}
+		}
+
+		return true;
 	}
 
 	/*
@@ -78,80 +141,7 @@ public class NQueen implements Work {
 	}
 	*/
 
-	Serializable main(Serializable t) {
-		Scanner scan = new Scanner(System.in);
-		int N = scan.nextInt();
-
-		System.out.println(N);
-
-		int[] init = new int[0];
-
-		System.out.println("optimize start");
-		for (int i = 0; i < 10; i++) {
-			NQueen1(N, init);
-			NQueen2(new NQueenData(N, init));
-			System.out.print('.');
-		}
-		System.out.println();
-		System.out.println("optimize finish");
-
-		long time = 0;
-		for (int i = 0; i < 100; i++) {
-			long start = System.currentTimeMillis();
-			NQueen1(N, init);
-			long end = System.currentTimeMillis();
-			time += end - start;
-			System.out.print('.');
-		}
-		System.out.println();
-		System.out.println("NQueen1:" + time / 100.0);
-
-		time = 0;
-		for (int i = 0; i < 100; i++) {
-			long start = System.currentTimeMillis();
-			NQueen2(new NQueenData(N, init));
-			long end = System.currentTimeMillis();
-			time += end - start;
-			System.out.print('.');
-		}
-		System.out.println();
-		System.out.println("NQueen2:" + time / 100.0);
-
-		return null;
-	}
-
-	private boolean NQueenCheck(int N, int[] map) {
-		for (int i = 0; i < map.length; i++) {
-			int pos = map[i];
-			for (int j = i + 1; j < map.length && map[j] != -1; j++) {
-				int row = pos / N;
-				int crow = map[j] / N;
-
-				int column = pos % N;
-				int ccolumn = map[j] % N;
-
-				int drow = crow - row;
-				int dcol = ccolumn - column;
-
-
-				// to - right
-				if (drow == 0) return false;
-
-				// to - down
-				if (dcol == 0) return false;
-
-				// left-down
-				if (drow == dcol) return false;
-
-				// to - right-down
-				if (drow == -dcol) return false;
-			}
-		}
-
-		return true;
-	}
-
-	Integer NQueen1(Integer N, int[] map) {
+	static Integer NQueen1(Integer N, int[] map) {
 		// fail-check
 		boolean ok = NQueenCheck(N, map);
 		if (ok && map.length == N && map[map.length - 1] != -1)
@@ -192,7 +182,7 @@ public class NQueen implements Work {
 		return res;
 	}
 
-	Serializable NQueen2(Serializable d) {
+	static Serializable NQueen2(Serializable d) {
 		NQueenData data = (NQueenData) d;
 		// fail-check
 		if (!NQueenCheck(data.N, data.map)) return 0;
@@ -218,7 +208,7 @@ public class NQueen implements Work {
 			if (data.map.length > 1)
 				res += NQueen1(data.N, newmap);
 			else {
-				Task task = new Task(this::NQueen2, new NQueenData(data.N, newmap));
+				Task task = new Task((SerializableFunction<Serializable, Serializable>) NQueen::NQueen2, new NQueenData(data.N, newmap));
 				taskList.add(task);
 				tasks.appendTask(task);
 			}
@@ -232,16 +222,27 @@ public class NQueen implements Work {
 		return sum;
 	}
 
-	class NQueenData implements Serializable {
-		public Integer N;
-		public int[] map;
+	@Override
+	public void starter() {
+		t = new Task(NQueen::main, null);
+		TaskDeque.appendTask(t);
+	}
 
-		public NQueenData() {
-		}
+	@Override
+	public void ender() {
 
-		public NQueenData(Integer n, int[] m) {
-			N = n;
-			map = m;
-		}
+	}
+}
+
+class NQueenData implements Serializable {
+	public Integer N;
+	public int[] map;
+
+	public NQueenData() {
+	}
+
+	public NQueenData(Integer n, int[] m) {
+		N = n;
+		map = m;
 	}
 }

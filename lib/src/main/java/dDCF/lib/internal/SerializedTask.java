@@ -3,10 +3,9 @@ package dDCF.lib.internal;
 import dDCF.lib.Task;
 
 import java.io.*;
-import java.util.function.Function;
 
 public class SerializedTask {
-	// public Function<Serializable, Serializable> function;
+	// public SerializableFunction<Serializable, Serializable> function;
 	public byte[] function;
 
 	// public Serializable input;
@@ -25,9 +24,7 @@ public class SerializedTask {
 
 		SerializedTask serializedTask = new SerializedTask();
 
-//		serializedTask.function = toByteArray((Function<Serializable, Serializable> & Serializable) task.function);
-		Serializable h = (Function<Serializable, Serializable> & Serializable) task.function;
-
+		serializedTask.function = toByteArray(task.function);
 		serializedTask.input = toByteArray(task.input);
 		serializedTask.result = toByteArray(task.result);
 		serializedTask.ended = task.ended;
@@ -41,7 +38,7 @@ public class SerializedTask {
 
 		Task task = new Task();
 
-		task.function = (Function<Serializable, Serializable>) toObject(serializedTask.function);
+		task.function = (SerializableFunction<Serializable, Serializable>) toObject(serializedTask.function);
 		task.input = toObject(serializedTask.input);
 		task.result = toObject(serializedTask.result);
 		task.ended = serializedTask.ended;
@@ -61,6 +58,7 @@ public class SerializedTask {
 			oss.close();
 			return byteArray.toByteArray();
 		} catch (IOException e) {
+			Utils.debugPrint(e.toString());
 			return null;
 		}
 	}
