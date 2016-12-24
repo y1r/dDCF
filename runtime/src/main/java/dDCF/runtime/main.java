@@ -3,6 +3,7 @@ package dDCF.runtime;
 import dDCF.lib.Work;
 import dDCF.lib.internal.Config;
 import dDCF.lib.internal.InterConnects.InterConnects;
+import dDCF.lib.internal.JarByteClassLoader;
 import dDCF.lib.internal.Utils;
 import dDCF.lib.internal.Worker;
 import dDCF.runtime.Utils.CmdLineParser;
@@ -70,6 +71,12 @@ public class main {
 
 			if (jarCode == null) System.out.println("failed getJarCode");
 			else System.out.println("jarCode:" + jarCode.length);
+			try {
+				JarByteClassLoader.loadJarFile(jarCode);
+			} catch (IOException e) {
+				Utils.debugPrint(e.toString());
+			}
+
 
 			try {
 				Object[] works = Reflection.getWork(cfg.jarByteCode).toArray();

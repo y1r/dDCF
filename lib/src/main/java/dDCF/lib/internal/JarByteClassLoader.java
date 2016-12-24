@@ -16,14 +16,12 @@ public class JarByteClassLoader extends ClassLoader {
 	private JarByteClassLoader() {
 	}
 
-	public static JarByteClassLoader getInstance(byte[] b) throws IOException {
+	public static void loadJarFile(byte[] b) throws IOException {
 		if (loader == null) {
 			loader = new JarByteClassLoader();
 			loader.jarByte = b;
 			loader.LoadClassesToMap(loader.jarByte);
 		}
-
-		return loader;
 	}
 
 	public static JarByteClassLoader getInstance() {
@@ -62,6 +60,8 @@ public class JarByteClassLoader extends ClassLoader {
 
 		// define class
 		classes.first = defineClass(name, classes.second, 0, classes.second.length);
+
+		resolveClass(classes.first);
 
 		return classes.first;
 	}

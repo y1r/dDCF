@@ -2,7 +2,6 @@ import dDCF.lib.Task;
 import dDCF.lib.TaskDeque;
 import dDCF.lib.Tasks;
 import dDCF.lib.Work;
-import dDCF.lib.internal.SerializableFunction;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -208,7 +207,7 @@ public class NQueen implements Work {
 			if (data.map.length > 1)
 				res += NQueen1(data.N, newmap);
 			else {
-				Task task = new Task((SerializableFunction<Serializable, Serializable>) NQueen::NQueen2, new NQueenData(data.N, newmap));
+				Task task = new Task(NQueen::NQueen2, new NQueenData(data.N, newmap));
 				taskList.add(task);
 				tasks.appendTask(task);
 			}

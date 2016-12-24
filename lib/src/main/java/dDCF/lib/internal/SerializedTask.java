@@ -68,12 +68,11 @@ public class SerializedTask {
 
 		try {
 			ByteArrayInputStream byteArray = new ByteArrayInputStream(array);
-			ObjectInputStream ois = new ObjectInputStream(byteArray);
+			CustomObjectInputStream ois = new CustomObjectInputStream(JarByteClassLoader.getInstance());
 
 			return (Serializable) ois.readObject();
 		} catch (Exception e) {
 			Utils.debugPrint(e.toString());
-
 			return null;
 		}
 	}

@@ -9,7 +9,8 @@ import java.util.stream.Stream;
 
 public class Reflection {
 	public static Stream<Work> getWork(byte[] jarByteCode) throws IOException {
-		JarByteClassLoader jarByteClassLoader = JarByteClassLoader.getInstance(jarByteCode);
+		JarByteClassLoader.loadJarFile(jarByteCode);
+		JarByteClassLoader jarByteClassLoader = JarByteClassLoader.getInstance();
 		Stream<String> stringStream = jarByteClassLoader.ClassNameStream();
 
 		Stream<String> works = stringStream.filter(s ->
