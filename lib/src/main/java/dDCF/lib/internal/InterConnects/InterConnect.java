@@ -1,6 +1,7 @@
 package dDCF.lib.internal.InterConnects;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import dDCF.lib.Task;
 import dDCF.lib.internal.Pair;
 import dDCF.lib.internal.SerializedTask;
@@ -38,7 +39,7 @@ public class InterConnect {
 		dataOutputStream = new DataOutputStream(outputStream);
 
 		objectMapper = new ObjectMapper(new MessagePackFactory());
-//		objectMapper.registerModule(new AfterburnerModule());
+		objectMapper.registerModule(new AfterburnerModule());
 
 		active = true;
 

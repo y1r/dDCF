@@ -1,11 +1,10 @@
 import dDCF.lib.Task;
 import dDCF.lib.TaskDeque;
 import dDCF.lib.Tasks;
-import dDCF.lib.Work;
 
 import java.io.Serializable;
 
-public class TestWork implements Work {
+public class TestWork {
 
 	public static Serializable work(Serializable i) {
 		System.out.println(i);
@@ -25,13 +24,13 @@ public class TestWork implements Work {
 		return tasks.getTask(0).result;
 	}
 
-	@Override
+	//	@Override
 	public void starter() {
 		TaskDeque.appendTask(new Task(TestWork::work, 0));
 		TaskDeque.appendTask(new Task(TestWork::work, 0));
 	}
 
-	@Override
+	//	@Override
 	public void ender() {
 
 	}

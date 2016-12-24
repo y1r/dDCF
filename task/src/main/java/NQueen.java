@@ -1,6 +1,7 @@
 import dDCF.lib.Task;
 import dDCF.lib.TaskDeque;
 import dDCF.lib.Tasks;
+import dDCF.lib.Work;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-public class NQueen {
+public class NQueen implements Work {
 	//public class NQueen {
 	Task t = null;
 
@@ -220,13 +221,13 @@ public class NQueen {
 		return sum;
 	}
 
-	//	@Override
+	@Override
 	public void starter() {
 		t = new Task(NQueen::main, null);
 		TaskDeque.appendTask(t);
 	}
 
-	//	@Override
+	@Override
 	public void ender() {
 
 	}
