@@ -166,11 +166,12 @@ public class InterConnect {
 
 	public void returnTask(Pair<Long, Task> stolen) {
 		Message msg = MessageFactory.newMessage(MESSAGE_TYPE.JOB_DONE, stolen.first + 1);
+		msg.task = SerializedTask.serialize(stolen.second);
 
 		try {
 			sendMessage(msg);
 		} catch (IOException e) {
-
+			Utils.debugPrint("steal: " + e.getMessage());
 		}
 
 		return;

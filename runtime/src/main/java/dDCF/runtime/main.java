@@ -77,12 +77,6 @@ public class main {
 				Utils.debugPrint(e.toString());
 			}
 
-
-			try {
-				Object[] works = Reflection.getWork(cfg.jarByteCode).toArray();
-			} catch (IOException e) {
-			}
-
 			Worker.startWorkers(cons);
 		}
 

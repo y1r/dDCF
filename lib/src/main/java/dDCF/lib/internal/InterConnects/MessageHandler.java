@@ -5,13 +5,11 @@ import dDCF.lib.TaskDeque;
 import dDCF.lib.internal.Config;
 import dDCF.lib.internal.SerializedTask;
 
-import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MessageHandler {
 	ConcurrentHashMap<Long, Task> delegatedTasks = new ConcurrentHashMap<>();
 
-	@SuppressWarnings("unchecked")
 	public Message handle(Message msg) {
 //		Utils.debugPrint("Received" + msg.toString());
 
@@ -84,15 +82,12 @@ public class MessageHandler {
 				// returns nothing
 
 				Task original = delegatedTasks.remove(msg.sequenceCode);
-
 				Task delegated = SerializedTask.deserialize(msg.task);
-				Object res = delegated.getResult();
 
-				original.setResult((Serializable) res);
+				original.setResult(delegated.getResult());
 
 				break;
 			}
-
 		}
 
 //		Utils.debugPrint("return: " + reply.toString());

@@ -1,20 +1,15 @@
 package dDCF.lib.internal;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 
 public class CustomObjectInputStream extends ObjectInputStream {
 	ClassLoader loader;
 
-	/*
-	private CustomObjectInputStream() throws IOException {
-		super();
-	}
-	*/
-
-	CustomObjectInputStream(ClassLoader l) throws IOException {
-		super();
+	CustomObjectInputStream(InputStream inputStream, ClassLoader l) throws IOException {
+		super(inputStream);
 		loader = l;
 	}
 
