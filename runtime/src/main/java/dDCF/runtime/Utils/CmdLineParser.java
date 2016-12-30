@@ -6,6 +6,7 @@ import org.apache.commons.cli.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Comparator;
 
 public class CmdLineParser {
 	Options opts;
@@ -14,21 +15,30 @@ public class CmdLineParser {
 		opts = new Options();
 
 		// for master mode
-		opts.addOption("m", "master", true, "Use this node as a master. Select your job jar file.");
+		opts.addOption("m", "master", true, "Task jar file (Master-Mode)");
 
 		// for worker mode
-		opts.addOption("w", "worker", true, "Use this as a worker. Select your master address.");
-		opts.addOption("r", "remote-port", true, "Select your remote(master) port number.");
+		opts.addOption("w", "worker", true, "Master (remote) address (Worker-Mode)");
+		opts.addOption("r", "remote-port", true, "Master (remote) port number");
 
 		// common options
-		opts.addOption("l", "local-port", true, "Select your local port number.");
-		opts.addOption("t", "threads", true, "Select number of available threads");
-		opts.addOption("h", "help", false, "Show usage.");
+		opts.addOption("l", "local-port", true, "Local port number");
+		opts.addOption("t", "threads", true, "Number of available threads");
+		opts.addOption("h", "help", false, "Show usage");
 		opts.addOption("d", "debug", false, "Debug mode");
 	}
 
 	public void showUsage() {
 		HelpFormatter formatter = new HelpFormatter();
+		formatter.setOptionComparator(new Comparator<Option>() {
+			// http://stackoverflow.com/questions/11741625/apache-commons-cli-ordering-help-options
+			private static final String OPTS_ORDER = "mwrlthd"; // short option names
+
+			@Override
+			public int compare(Option o1, Option o2) {
+				return OPTS_ORDER.indexOf(o1.getOpt()) - OPTS_ORDER.indexOf(o2.getOpt());
+			}
+		});
 		formatter.printHelp("runtime.jar", opts);
 	}
 
@@ -42,7 +52,7 @@ public class CmdLineParser {
 		}
 
 		if (cmd.hasOption('m') && cmd.hasOption('w'))
-			throw new ParseException("You must select master-mode OR worker-mode.");
+			throw new ParseException("Select -m OR -w");
 
 		// for master mode
 		if (cmd.hasOption('m')) {
@@ -56,10 +66,10 @@ public class CmdLineParser {
 			try {
 				cfg.host = InetAddress.getByName(ipaddr);
 			} catch (UnknownHostException e) {
-				throw new ParseException("Please check your master IP address/port.");
+				throw new ParseException("Check your master IP address");
 			}
 		} else {
-			throw new ParseException("You must select master or worker mode.");
+			throw new ParseException("Select -m OR -w");
 		}
 
 		if (!cfg.isMaster) {

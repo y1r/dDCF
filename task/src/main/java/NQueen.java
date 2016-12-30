@@ -22,16 +22,16 @@ public class NQueen implements Work {
 		int[] init = new int[0];
 
 		System.out.println("optimize start");
-		for (int i = 0; i < 10; i++) {
-			NQueen1(N, init);
-			NQueen2(new NQueenData(N, init));
+		for (int i = 0; i < 5; i++) {
+			NQueen1(N - 1, init);
+			NQueen2(new NQueenData(N - 1, init));
 			System.out.print('.');
 		}
 		System.out.println();
 		System.out.println("optimize finish");
 
 		long time = 0;
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10; i++) {
 			long start = System.currentTimeMillis();
 			NQueen1(N, init);
 			long end = System.currentTimeMillis();
@@ -39,10 +39,10 @@ public class NQueen implements Work {
 			System.out.print('.');
 		}
 		System.out.println();
-		System.out.println("NQueen1:" + time / 100.0);
+		System.out.println("NQueen1:" + time / 10.0);
 
 		time = 0;
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10; i++) {
 			long start = System.currentTimeMillis();
 			NQueen2(new NQueenData(N, init));
 			long end = System.currentTimeMillis();
@@ -50,7 +50,7 @@ public class NQueen implements Work {
 			System.out.print('.');
 		}
 		System.out.println();
-		System.out.println("NQueen2:" + time / 100.0);
+		System.out.println("NQueen2:" + time / 10.0);
 
 		return null;
 	}

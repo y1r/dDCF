@@ -57,6 +57,7 @@ public class main {
 					}
 				} else {
 					System.out.println("Couldn't find valid work.");
+					System.exit(-1);
 				}
 
 			} catch (IOException e) {
@@ -75,6 +76,7 @@ public class main {
 				JarByteClassLoader.loadJarFile(jarCode);
 			} catch (IOException e) {
 				Utils.debugPrint(e.toString());
+				System.exit(-1);
 			}
 
 			Worker.startWorkers(cons);
