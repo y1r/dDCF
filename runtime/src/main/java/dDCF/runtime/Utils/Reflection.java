@@ -29,7 +29,7 @@ public class Reflection {
 						Class work = jarByteClassLoader.findClass(str);
 						workInstance = (Work) work.newInstance();
 					} catch (Exception e) {
-						System.out.println(e.toString());
+						e.printStackTrace();
 					}
 					return workInstance;
 				}

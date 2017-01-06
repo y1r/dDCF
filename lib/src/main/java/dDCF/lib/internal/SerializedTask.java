@@ -58,7 +58,7 @@ public class SerializedTask {
 			oss.close();
 			return byteArray.toByteArray();
 		} catch (IOException e) {
-			Utils.debugPrint(e.toString());
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -72,7 +72,7 @@ public class SerializedTask {
 
 			return (Serializable) ois.readObject();
 		} catch (Exception e) {
-			Utils.debugPrint(e.toString());
+			e.printStackTrace();
 			return null;
 		}
 	}

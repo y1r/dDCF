@@ -4,19 +4,26 @@ import java.net.InetAddress;
 
 public class Config {
 	private static Config _instance;
+
+	// Master Configuration
 	public boolean isMaster;
 	public String jarName = null;
-	public byte[] jarByteCode = null;
+	public double connectProb;
+
+	// Worker Configuration
 	public InetAddress host;
-	public int remote_port;
-	public int local_port;
+	public int remotePort;
+
+	// Common
+	public byte[] jarByteCode = null;
+	public int localPort;
 	public boolean isDebug;
 	public int threads;
 
 	private Config() {
 	}
 
-	public static Config getInstance() {
+	public static synchronized Config getInstance() {
 		if (_instance == null) _instance = new Config();
 
 		return _instance;
@@ -29,13 +36,14 @@ public class Config {
 		if (isMaster) {
 			stringBuilder.append("Master-mode ");
 			stringBuilder.append("jarName:" + jarName + " ");
+			stringBuilder.append("connect-probability:" + connectProb + " ");
 		} else {
 			stringBuilder.append("Worker-mode ");
-			stringBuilder.append("host:" + host.toString() + " ");
+			stringBuilder.append("remoteHost:" + host.toString() + " ");
+			stringBuilder.append("remotePort:" + remotePort + " ");
 		}
 
-		stringBuilder.append("remote_port:" + remote_port + " ");
-		stringBuilder.append("local_port:" + local_port + " ");
+		stringBuilder.append("localPort:" + localPort + " ");
 		stringBuilder.append("threads:" + threads + " ");
 		stringBuilder.append("isDebug:" + isDebug);
 

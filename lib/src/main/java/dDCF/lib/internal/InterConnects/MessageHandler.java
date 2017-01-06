@@ -4,6 +4,7 @@ import dDCF.lib.Task;
 import dDCF.lib.TaskDeque;
 import dDCF.lib.internal.Config;
 import dDCF.lib.internal.SerializedTask;
+import dDCF.lib.internal.Utils;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,9 +17,15 @@ public class MessageHandler {
 		Message reply = null;
 
 		switch (msg.messageType) {
-			case NODE_REQUEST: {
+			case NODE_REGISTER: {
 				// returns NODE_OFFER
-				// TODO: implement
+
+				reply = MessageFactory.newMessage(MESSAGE_TYPE.NODE_OFFER, msg.sequenceCode + 1);
+
+				Utils.debugPrint("serverAddr:" + msg.serverAddr);
+				Utils.debugPrint("serverPort:" + msg.serverPort);
+
+				reply.nodesOffer = ConnectionManager.getInstance().registerNodeAndOffer(msg.serverAddr, msg.serverPort);
 
 				break;
 			}

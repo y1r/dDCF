@@ -15,6 +15,8 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class InterConnects {
+	InterConnect master;
+
 	List<InterConnect> interConnectList;
 
 	// accepter : accepter is an accept loop, it handles NEW connection.
@@ -29,26 +31,19 @@ public class InterConnects {
 	public InterConnects(Config cfg) throws IOException {
 		interConnectList = new ArrayList<>();
 
-		if (!cfg.isMaster) {
-			appendAddress(cfg.host, cfg.remote_port);
-		}
+		startAccepter(cfg.localPort);
 
-		startAccepter(cfg.local_port);
-
-		/* send test message */
-		/*
-		if (!cfg.isMaster) {
-			Utils.debugPrint("SEND_START");
-			Message msg = new Message();
-			try {
-				for (int i = 0; i < interConnectList.size(); i++)
-					interConnectList.get(0).sendMessage(msg);
-			} catch (Exception e) {
-				System.out.println("write error" + e.toString());
+		if (cfg.isMaster)
+			master = null;
+		else {
+			// is worker
+			registerMaster(cfg.host, cfg.remotePort);
+			List<Pair<InetAddress, Integer>> offers = master.registerNode();
+			for (Pair<InetAddress, Integer> cur : offers) {
+				Utils.debugPrint("connect to " + cur.toString());
+				appendAddress(cur.first, cur.second);
 			}
-			Utils.debugPrint("SEND_DONE");
 		}
-		*/
 	}
 
 	private void startAccepter(int port) throws IOException {
@@ -81,19 +76,13 @@ public class InterConnects {
 	}
 
 	private void appendSocket(Socket sock) throws IOException {
-		InterConnect interConnect = new InterConnect(sock);
+		InterConnect interConnect = new InterConnect(sock, false);
 		interConnectList.add(interConnect);
 	}
 
-	public byte[] getJarCode() {
-		for (InterConnect interConnect : interConnectList) {
-			byte[] byteCode = interConnect.getJarCode();
-
-			if (byteCode != null)
-				return byteCode;
-		}
-
-		return null;
+	private void registerMaster(InetAddress inetAddress, int port) throws IOException {
+		Socket sock = new Socket(inetAddress, port);
+		master = new InterConnect(sock, true);
 	}
 
 	public Pair<Long, Task> stealTask() {
@@ -122,4 +111,7 @@ public class InterConnects {
 		interConnectList.get(keyPair.first).returnTask(new Pair<>(keyPair.second, task.second));
 	}
 
+	public byte[] getJarCode() {
+		return master.getJarCode();
+	}
 }

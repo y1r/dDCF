@@ -9,7 +9,7 @@ import java.util.List;
 
 enum MESSAGE_TYPE {
 	UNDEFINED,
-	NODE_REQUEST,
+	NODE_REGISTER,
 	NODE_OFFER,
 	EXECUTE_REQUEST,
 	EXECUTE_OFFER,
@@ -25,6 +25,10 @@ public class Message {
 	// common
 	public MESSAGE_TYPE messageType;
 	public long sequenceCode;
+
+	// NODE_REGISTER
+	public InetAddress serverAddr;
+	public int serverPort;
 
 	// NODE_OFFER
 	public List<Pair<InetAddress, Integer>> nodesOffer;
@@ -52,6 +56,10 @@ public class Message {
 		stringBuilder.append("type: " + messageType.name() + "\n");
 
 		switch (messageType) {
+			case NODE_REGISTER:
+				stringBuilder.append("server port to regist: " + serverPort + "\n");
+				break;
+
 			case NODE_OFFER:
 				stringBuilder.append("Offers: " + Utils.getSizeOrNull(nodesOffer) + "\n");
 				break;

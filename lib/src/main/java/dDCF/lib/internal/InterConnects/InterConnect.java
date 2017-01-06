@@ -3,13 +3,17 @@ package dDCF.lib.internal.InterConnects;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import dDCF.lib.Task;
+import dDCF.lib.internal.Config;
 import dDCF.lib.internal.Pair;
 import dDCF.lib.internal.SerializedTask;
 import dDCF.lib.internal.Utils;
 import org.msgpack.jackson.dataformat.MessagePackFactory;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -31,7 +35,7 @@ public class InterConnect {
 	BlockingQueue<byte[]> sendQueue = new LinkedBlockingQueue<>();
 	Thread sendThread;
 
-	public InterConnect(Socket sock) throws IOException {
+	public InterConnect(Socket sock, boolean isBaseCon) throws IOException {
 		inputStream = sock.getInputStream();
 		outputStream = sock.getOutputStream();
 
@@ -62,12 +66,11 @@ public class InterConnect {
 						sendMessage(reply);
 
 				} catch (IOException e) {
+					e.printStackTrace();
 					active = false;
-					Utils.debugPrint("Listener Stopped." + e.toString());
 				}
 			}
-		}
-		);
+		});
 		thread.start();
 
 		sendThread = new Thread(() ->
@@ -81,7 +84,7 @@ public class InterConnect {
 
 				} catch (InterruptedException e) {
 				} catch (IOException e) {
-					Utils.debugPrint(e.toString());
+					e.printStackTrace();
 				}
 			}
 		});
@@ -92,7 +95,7 @@ public class InterConnect {
 		while (true) {
 			try {
 				sendQueue.put(objectMapper.writeValueAsBytes(msg));
-				Utils.debugPrint(msg.toString());
+				Utils.debugPrint("send" + msg.toString());
 				break;
 			} catch (InterruptedException e) {
 			}
@@ -103,13 +106,13 @@ public class InterConnect {
 		int msgLen = dataInputStream.readInt();
 		byte[] packedMsg = new byte[msgLen];
 
-		Utils.debugPrint(packedMsg.toString());
-
 		int ret;
 		while ((ret = dataInputStream.read(packedMsg, packedMsg.length - msgLen, msgLen)) >= 0 && msgLen > 0) {
 			if (ret == -1) throw new IOException();
 			msgLen -= ret;
 		}
+
+		Utils.debugPrint("read" + packedMsg.toString());
 
 		return objectMapper.readValue(packedMsg, Message.class);
 	}
@@ -124,7 +127,7 @@ public class InterConnect {
 			try {
 				countDownLatch.await();
 			} catch (InterruptedException e) {
-				Utils.debugPrint("Interrupted Exception in sendMessageAndWaitReply." + e.getMessage());
+				e.printStackTrace();
 				break;
 			}
 			if (returnedMessages.containsKey(seqCodeOfReply)) {
@@ -148,6 +151,28 @@ public class InterConnect {
 		return reply.jarByteCode;
 	}
 
+	public List<Pair<InetAddress, Integer>> registerNode() {
+		Message msg = MessageFactory.newMessage(MESSAGE_TYPE.NODE_REGISTER);
+
+		try {
+			msg.serverPort = Config.getInstance().localPort;
+			msg.serverAddr = InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		Message reply = null;
+		try {
+			reply = sendMessageAndWaitReply(msg);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		return reply.nodesOffer;
+	}
+
 	public Pair<Long, Task> stealTask() {
 		Message msg = MessageFactory.newMessage(MESSAGE_TYPE.JOB_REQUEST);
 		Message reply = null;
@@ -155,7 +180,7 @@ public class InterConnect {
 		try {
 			reply = sendMessageAndWaitReply(msg);
 		} catch (IOException e) {
-			Utils.debugPrint("steal: " + e.getMessage());
+			e.printStackTrace();
 		}
 
 		if (reply == null) return null;
@@ -172,7 +197,7 @@ public class InterConnect {
 		try {
 			sendMessage(msg);
 		} catch (IOException e) {
-			Utils.debugPrint("steal: " + e.getMessage());
+			e.printStackTrace();
 		}
 
 		return;

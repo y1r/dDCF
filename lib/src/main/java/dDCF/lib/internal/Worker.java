@@ -62,6 +62,7 @@ public class Worker extends Thread {
 	private static void workInfinitely() {
 		while (true) {
 			work();
+
 			Pair<Long, Task> t = interConnects.stealTask();
 			if (t != null && t.second != null) {
 				t.second.execute();

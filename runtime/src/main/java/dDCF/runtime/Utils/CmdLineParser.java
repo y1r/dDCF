@@ -16,6 +16,7 @@ public class CmdLineParser {
 
 		// for master mode
 		opts.addOption("m", "master", true, "Task jar file (Master-Mode)");
+		opts.addOption("p", "prob-of-cons", true, "Probability Of Connection (Default: 1.0)");
 
 		// for worker mode
 		opts.addOption("w", "worker", true, "Master (remote) address (Worker-Mode)");
@@ -32,7 +33,7 @@ public class CmdLineParser {
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.setOptionComparator(new Comparator<Option>() {
 			// http://stackoverflow.com/questions/11741625/apache-commons-cli-ordering-help-options
-			private static final String OPTS_ORDER = "mwrlthd"; // short option names
+			private static final String OPTS_ORDER = "mpwrlthd"; // short option names
 
 			@Override
 			public int compare(Option o1, Option o2) {
@@ -58,6 +59,7 @@ public class CmdLineParser {
 		if (cmd.hasOption('m')) {
 			cfg.isMaster = true;
 			cfg.jarName = cmd.getOptionValue('m');
+			cfg.connectProb = Double.parseDouble(cmd.getOptionValue('p', "1.0"));
 		}
 		// for worker mode
 		else if (cmd.hasOption('w')) {
@@ -73,10 +75,10 @@ public class CmdLineParser {
 		}
 
 		if (!cfg.isMaster) {
-			cfg.remote_port = Integer.parseInt(cmd.getOptionValue("r", Integer.toString(Constants.PORT)));
+			cfg.remotePort = Integer.parseInt(cmd.getOptionValue("r", Integer.toString(Constants.PORT)));
 		}
 
-		cfg.local_port = Integer.parseInt(cmd.getOptionValue("l", Integer.toString(Constants.PORT)));
+		cfg.localPort = Integer.parseInt(cmd.getOptionValue("l", Integer.toString(Constants.PORT)));
 		cfg.threads = Integer.parseInt(cmd.getOptionValue("t", Integer.toString(Runtime.getRuntime().availableProcessors())));
 		cfg.isDebug = cmd.hasOption("d");
 

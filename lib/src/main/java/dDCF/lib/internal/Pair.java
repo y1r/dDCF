@@ -4,6 +4,9 @@ public class Pair<T, U> {
 	public T first;
 	public U second;
 
+	public Pair() {
+	}
+
 	public Pair(T _first, U _second) {
 		first = _first;
 		second = _second;
@@ -16,5 +19,10 @@ public class Pair<T, U> {
 			return first.equals(pair.first) && second.equals(pair.second);
 		}
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return "first=" + first + " second=" + second;
 	}
 }

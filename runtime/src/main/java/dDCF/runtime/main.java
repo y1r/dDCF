@@ -61,7 +61,7 @@ public class main {
 				}
 
 			} catch (IOException e) {
-				System.out.println(e.toString());
+				e.printStackTrace();
 			}
 		}
 
@@ -75,7 +75,7 @@ public class main {
 			try {
 				JarByteClassLoader.loadJarFile(jarCode);
 			} catch (IOException e) {
-				Utils.debugPrint(e.toString());
+				e.printStackTrace();
 				System.exit(-1);
 			}
 

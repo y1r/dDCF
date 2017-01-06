@@ -229,7 +229,6 @@ public class NQueen implements Work {
 
 	@Override
 	public void ender() {
-
 	}
 }
 
