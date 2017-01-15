@@ -9,9 +9,7 @@ import dDCF.lib.internal.Utils;
 import org.msgpack.jackson.dataformat.MessagePackFactory;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -157,16 +155,12 @@ public class InterConnect {
 		return reply.jarByteCode;
 	}
 
-	public List<Pair<String, Integer>> registerNode() {
+	public List<Pair<byte[], Integer>> registerNode() {
 		Message msg = MessageFactory.newMessage(MESSAGE_TYPE.NODE_REGISTER);
 
-		try {
-			msg.serverPort = Config.getInstance().localPort;
-			msg.serverAddr = InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			return null;
-		}
+
+		msg.serverPort = Config.getInstance().localPort;
+		msg.serverIPv4Addr = Utils.getLocalHostAddress();
 
 		Message reply = null;
 		try {

@@ -4,8 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.Date;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.*;
 
 public class Utils {
 	public static void debugPrint(String msg) {
@@ -40,5 +42,41 @@ public class Utils {
 		}
 
 		return byteArrayOutputStream.toByteArray();
+	}
+
+	public static byte[] getLocalHostAddress() {
+		List<byte[]> inetAddressList = new ArrayList<>();
+
+		Enumeration<NetworkInterface> networkInterfaces = null;
+		try {
+			networkInterfaces = NetworkInterface.getNetworkInterfaces();
+		} catch (SocketException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		InetAddress master = Config.getInstance().host;
+
+		for (NetworkInterface ni = networkInterfaces.nextElement(); networkInterfaces.hasMoreElements(); ) {
+			// check if master is reachable from ni
+			try {
+				if (!master.isReachable(ni, 0, 0))
+					continue;
+			} catch (IOException e) {
+				continue;
+			}
+
+			Enumeration<InetAddress> inetAddresses = ni.getInetAddresses();
+			for (InetAddress inetAddress = inetAddresses.nextElement(); inetAddresses.hasMoreElements(); ) {
+				// ipv4 is only ok( 32[bit] / 8[bit/byte] = 4[byte] )
+				if (!inetAddress.isLoopbackAddress() && inetAddress.getAddress().length == 4) {
+					inetAddressList.add(inetAddress.getAddress());
+				}
+			}
+		}
+
+		assert inetAddressList.size() > 1;
+
+		return inetAddressList.get(0);
 	}
 }

@@ -26,11 +26,11 @@ public class Message {
 	public long sequenceCode;
 
 	// NODE_REGISTER
-	public String serverAddr;
+	public byte[] serverIPv4Addr;
 	public int serverPort;
 
 	// NODE_OFFER
-	public List<Pair<String, Integer>> nodesOffer;
+	public List<Pair<byte[], Integer>> nodesOffer;
 
 	// EXECUTE_OFFER
 	public byte[] jarByteCode;
