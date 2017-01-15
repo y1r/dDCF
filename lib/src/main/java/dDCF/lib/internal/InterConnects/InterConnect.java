@@ -1,7 +1,6 @@
 package dDCF.lib.internal.InterConnects;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import dDCF.lib.Task;
 import dDCF.lib.internal.Config;
 import dDCF.lib.internal.Pair;
@@ -43,7 +42,14 @@ public class InterConnect {
 		dataOutputStream = new DataOutputStream(outputStream);
 
 		objectMapper = new ObjectMapper(new MessagePackFactory());
-		objectMapper.registerModule(new AfterburnerModule());
+//		objectMapper.registerModule(new AfterburnerModule());
+
+		// TODO: benchmarking
+/*
+		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		objectMapper.configure(WRITE_ENUMS_USING_INDEX, true);
+		*/
+
 
 		active = true;
 
@@ -151,12 +157,12 @@ public class InterConnect {
 		return reply.jarByteCode;
 	}
 
-	public List<Pair<InetAddress, Integer>> registerNode() {
+	public List<Pair<String, Integer>> registerNode() {
 		Message msg = MessageFactory.newMessage(MESSAGE_TYPE.NODE_REGISTER);
 
 		try {
 			msg.serverPort = Config.getInstance().localPort;
-			msg.serverAddr = InetAddress.getLocalHost();
+			msg.serverAddr = InetAddress.getLocalHost().getHostAddress();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 			return null;

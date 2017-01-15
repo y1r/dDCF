@@ -2,6 +2,7 @@ import dDCF.lib.Task;
 import dDCF.lib.TaskDeque;
 import dDCF.lib.Tasks;
 import dDCF.lib.Work;
+import dDCF.lib.internal.InterConnects.ConnectionManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,14 +23,14 @@ public class NQueen implements Work {
 		int[] init = new int[0];
 
 		System.out.println("optimize start");
-		for (int i = 0; i < 5; i++) {
-			NQueen1(N - 1, init);
-			NQueen2(new NQueenData(N - 1, init));
+		for (int i = 0; i < 10; i++) {
+			NQueen1(8, init);
+			NQueen2(new NQueenData(8, init));
 			System.out.print('.');
 		}
 		System.out.println();
 		System.out.println("optimize finish");
-
+/*
 		long time = 0;
 		for (int i = 0; i < 10; i++) {
 			long start = System.currentTimeMillis();
@@ -40,8 +41,8 @@ public class NQueen implements Work {
 		}
 		System.out.println();
 		System.out.println("NQueen1:" + time / 10.0);
-
-		time = 0;
+*/
+		long time = 0;
 		for (int i = 0; i < 10; i++) {
 			long start = System.currentTimeMillis();
 			NQueen2(new NQueenData(N, init));
@@ -50,7 +51,10 @@ public class NQueen implements Work {
 			System.out.print('.');
 		}
 		System.out.println();
-		System.out.println("NQueen2:" + time / 10.0);
+		System.err.println(ConnectionManager.getInstance().getConnectionCounts() + "," + time / 10.0);
+//		System.out.println("NQueen2:" + time / 100.0);
+
+		System.exit(0);
 
 		return null;
 	}
@@ -223,6 +227,11 @@ public class NQueen implements Work {
 
 	@Override
 	public void starter() {
+		try {
+			Thread.sleep(5000);
+		} catch (Exception e) {
+
+		}
 		t = new Task(NQueen::main, null);
 		TaskDeque.appendTask(t);
 	}

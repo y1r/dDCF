@@ -38,10 +38,10 @@ public class InterConnects {
 		else {
 			// is worker
 			registerMaster(cfg.host, cfg.remotePort);
-			List<Pair<InetAddress, Integer>> offers = master.registerNode();
-			for (Pair<InetAddress, Integer> cur : offers) {
+			List<Pair<String, Integer>> offers = master.registerNode();
+			for (Pair<String, Integer> cur : offers) {
 				Utils.debugPrint("connect to " + cur.toString());
-				appendAddress(cur.first, cur.second);
+				appendAddress(InetAddress.getByName(cur.first), cur.second);
 			}
 		}
 	}

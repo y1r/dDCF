@@ -4,7 +4,6 @@ import dDCF.lib.internal.Pair;
 import dDCF.lib.internal.SerializedTask;
 import dDCF.lib.internal.Utils;
 
-import java.net.InetAddress;
 import java.util.List;
 
 enum MESSAGE_TYPE {
@@ -27,11 +26,11 @@ public class Message {
 	public long sequenceCode;
 
 	// NODE_REGISTER
-	public InetAddress serverAddr;
+	public String serverAddr;
 	public int serverPort;
 
 	// NODE_OFFER
-	public List<Pair<InetAddress, Integer>> nodesOffer;
+	public List<Pair<String, Integer>> nodesOffer;
 
 	// EXECUTE_OFFER
 	public byte[] jarByteCode;
