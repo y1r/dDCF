@@ -37,7 +37,7 @@ public class InterConnects {
 			master = null;
 		else {
 			// is worker
-			registerMaster(cfg.host, cfg.remotePort);
+			registerMaster(cfg.remoteHost, cfg.remotePort);
 			List<Pair<byte[], Integer>> offers = master.registerNode();
 			for (Pair<byte[], Integer> cur : offers) {
 				Utils.debugPrint("connect to " + cur.toString());

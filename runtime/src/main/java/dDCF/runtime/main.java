@@ -18,7 +18,7 @@ public class main {
 		CmdLineParser parser = new CmdLineParser();
 
 		try {
-			cfg = parser.Parse(args);
+			cfg = parser.parse(args);
 		} catch (ParseException e) {
 			System.out.println("Parse Error: " + e.getMessage());
 			parser.showUsage();
@@ -28,7 +28,7 @@ public class main {
 		// cache jar file (master)
 		if (cfg.isMaster) {
 			try {
-				cfg.jarByteCode = Utils.ReadFile(cfg.jarName);
+				cfg.jarByteCode = Utils.readFile(cfg.jarName);
 			} catch (IOException e) {
 				System.out.println("Jar File Reading Error: " + e.getMessage());
 			}

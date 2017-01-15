@@ -35,7 +35,7 @@ public class JarByteClassLoader extends ClassLoader {
 			// exclude directories
 			if (entry.getName().endsWith(".class")) {
 				// convert foo/bar/sample.class to foo.bar.sample
-				byteCodeClasses.put(entry.getName().substring(0, entry.getName().length() - 6).replace('/', '.'), new Pair<>(null, Utils.ReadInputStream(jarInputStream)));
+				byteCodeClasses.put(entry.getName().substring(0, entry.getName().length() - 6).replace('/', '.'), new Pair<>(null, Utils.readInputStream(jarInputStream)));
 			}
 		}
 	}

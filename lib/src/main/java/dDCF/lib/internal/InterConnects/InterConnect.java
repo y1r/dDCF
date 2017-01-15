@@ -17,7 +17,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class InterConnect {
-	static ObjectMapper objectMapper;
+	static ObjectMapper objectMapper = new ObjectMapper(new MessagePackFactory());
+	static MessageSerializer messageSerializer = new MessageSerializer();
 	public DataInputStream dataInputStream;
 	public DataOutputStream dataOutputStream;
 	Thread thread;
@@ -39,15 +40,11 @@ public class InterConnect {
 		dataInputStream = new DataInputStream(inputStream);
 		dataOutputStream = new DataOutputStream(outputStream);
 
-		objectMapper = new ObjectMapper(new MessagePackFactory());
-//		objectMapper.registerModule(new AfterburnerModule());
-
 		// TODO: benchmarking
 /*
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		objectMapper.configure(WRITE_ENUMS_USING_INDEX, true);
 		*/
-
 
 		active = true;
 
@@ -98,7 +95,12 @@ public class InterConnect {
 	private void sendMessage(Message msg) throws IOException {
 		while (true) {
 			try {
-				sendQueue.put(objectMapper.writeValueAsBytes(msg));
+				Utils.debugPrint("send" + msg.toString());
+				if (Config.getInstance().usePacket) {
+					sendQueue.put(messageSerializer.serialize(msg));
+				} else {
+					sendQueue.put(objectMapper.writeValueAsBytes(msg));
+				}
 				Utils.debugPrint("send" + msg.toString());
 				break;
 			} catch (InterruptedException e) {
@@ -108,17 +110,16 @@ public class InterConnect {
 
 	private Message readMessage() throws IOException {
 		int msgLen = dataInputStream.readInt();
-		byte[] packedMsg = new byte[msgLen];
-
-		int ret;
-		while ((ret = dataInputStream.read(packedMsg, packedMsg.length - msgLen, msgLen)) >= 0 && msgLen > 0) {
-			if (ret == -1) throw new IOException();
-			msgLen -= ret;
-		}
+		Utils.debugPrint("read" + msgLen);
+		byte[] packedMsg = Utils.readInputStream(dataInputStream, msgLen);
 
 		Utils.debugPrint("read" + packedMsg.toString());
 
-		return objectMapper.readValue(packedMsg, Message.class);
+		if (Config.getInstance().usePacket) {
+			return messageSerializer.deserialize(packedMsg);
+		} else {
+			return objectMapper.readValue(packedMsg, Message.class);
+		}
 	}
 
 	private Message sendMessageAndWaitReply(Message msg) throws IOException {
@@ -158,9 +159,10 @@ public class InterConnect {
 	public List<Pair<byte[], Integer>> registerNode() {
 		Message msg = MessageFactory.newMessage(MESSAGE_TYPE.NODE_REGISTER);
 
-
+		Utils.debugPrint("regist");
 		msg.serverPort = Config.getInstance().localPort;
-		msg.serverIPv4Addr = Utils.getLocalHostAddress();
+		msg.serverIPv4Addr = Config.getInstance().localHost.getAddress();
+		Utils.debugPrint("registed");
 
 		Message reply = null;
 		try {

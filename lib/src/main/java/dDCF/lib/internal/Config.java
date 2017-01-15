@@ -11,13 +11,15 @@ public class Config {
 	public double connectProb;
 
 	// Worker Configuration
-	public InetAddress host;
+	public InetAddress remoteHost;
 	public int remotePort;
 
 	// Common
 	public byte[] jarByteCode = null;
+	public InetAddress localHost;
 	public int localPort;
 	public boolean isDebug;
+	public boolean usePacket = false;
 	public int threads;
 
 	private Config() {
@@ -39,13 +41,15 @@ public class Config {
 			stringBuilder.append("connect-probability:" + connectProb + " ");
 		} else {
 			stringBuilder.append("Worker-mode ");
-			stringBuilder.append("remoteHost:" + host.toString() + " ");
+			stringBuilder.append("remoteHost:" + remoteHost.toString() + " ");
 			stringBuilder.append("remotePort:" + remotePort + " ");
 		}
 
+		stringBuilder.append("localHost:" + localHost.toString() + " ");
 		stringBuilder.append("localPort:" + localPort + " ");
 		stringBuilder.append("threads:" + threads + " ");
 		stringBuilder.append("isDebug:" + isDebug);
+		stringBuilder.append("usePacket:" + usePacket);
 
 		return stringBuilder.toString();
 	}

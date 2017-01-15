@@ -4,10 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
 
 public class Utils {
 	public static void debugPrint(String msg) {
@@ -27,11 +25,11 @@ public class Utils {
 			return Integer.toString(collection.size());
 	}
 
-	public static byte[] ReadFile(String name) throws IOException {
-		return ReadInputStream(new FileInputStream(name));
+	public static byte[] readFile(String name) throws IOException {
+		return readInputStream(new FileInputStream(name));
 	}
 
-	public static byte[] ReadInputStream(InputStream stream) throws IOException {
+	public static byte[] readInputStream(InputStream stream) throws IOException {
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
 		byte[] buffer = new byte[1000];
@@ -44,39 +42,15 @@ public class Utils {
 		return byteArrayOutputStream.toByteArray();
 	}
 
-	public static byte[] getLocalHostAddress() {
-		List<byte[]> inetAddressList = new ArrayList<>();
+	public static byte[] readInputStream(InputStream stream, int len) throws IOException {
+		byte[] buffer = new byte[len];
 
-		Enumeration<NetworkInterface> networkInterfaces = null;
-		try {
-			networkInterfaces = NetworkInterface.getNetworkInterfaces();
-		} catch (SocketException e) {
-			e.printStackTrace();
-			return null;
+		int ret;
+		while ((ret = stream.read(buffer, buffer.length - len, len)) >= 0 && len > 0) {
+			if (ret == -1) throw new IOException();
+			len -= ret;
 		}
 
-		InetAddress master = Config.getInstance().host;
-
-		for (NetworkInterface ni = networkInterfaces.nextElement(); networkInterfaces.hasMoreElements(); ) {
-			// check if master is reachable from ni
-			try {
-				if (!master.isReachable(ni, 0, 0))
-					continue;
-			} catch (IOException e) {
-				continue;
-			}
-
-			Enumeration<InetAddress> inetAddresses = ni.getInetAddresses();
-			for (InetAddress inetAddress = inetAddresses.nextElement(); inetAddresses.hasMoreElements(); ) {
-				// ipv4 is only ok( 32[bit] / 8[bit/byte] = 4[byte] )
-				if (!inetAddress.isLoopbackAddress() && inetAddress.getAddress().length == 4) {
-					inetAddressList.add(inetAddress.getAddress());
-				}
-			}
-		}
-
-		assert inetAddressList.size() > 1;
-
-		return inetAddressList.get(0);
+		return buffer;
 	}
 }

@@ -6,18 +6,6 @@ import dDCF.lib.internal.Utils;
 
 import java.util.List;
 
-enum MESSAGE_TYPE {
-	UNDEFINED,
-	NODE_REGISTER,
-	NODE_OFFER,
-	EXECUTE_REQUEST,
-	EXECUTE_OFFER,
-	JOB_REQUEST,
-	JOB_OFFER,
-	JOB_RECEIVED,
-	JOB_DONE
-}
-
 public class Message {
 	// ALL VARIABLES MUST BE 'PUBLIC'
 
@@ -32,8 +20,12 @@ public class Message {
 	// NODE_OFFER
 	public List<Pair<byte[], Integer>> nodesOffer;
 
+	// EXECUTE_REQUEST
+
 	// EXECUTE_OFFER
 	public byte[] jarByteCode;
+
+	// JOB_REQUEST
 
 	// JOB_OFFER
 	public SerializedTask task;
@@ -41,8 +33,7 @@ public class Message {
 	// JOB_RECEIVED
 
 	// JOB_DONE
-	// public Task task;
-
+	// public SerializedTask task;
 
 	public Message() {
 		messageType = MESSAGE_TYPE.UNDEFINED;

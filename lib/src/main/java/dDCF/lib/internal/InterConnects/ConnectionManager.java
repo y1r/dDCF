@@ -20,7 +20,7 @@ public class ConnectionManager {
 		p = Config.getInstance().connectProb;
 
 		// add master
-		nodeList.add(new Pair<>(Utils.getLocalHostAddress(), Config.getInstance().localPort));
+		nodeList.add(new Pair<>(Config.getInstance().localHost.getAddress(), Config.getInstance().localPort));
 	}
 
 	public static synchronized ConnectionManager getInstance() {
