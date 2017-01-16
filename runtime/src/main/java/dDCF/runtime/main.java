@@ -80,7 +80,57 @@ public class main {
 			}
 
 			Worker.startWorkers(cons);
+/*
+			Message msg = MessageFactory.newMessage(MESSAGE_TYPE.JOB_REQUEST);
+			ObjectMapper objectMapper = new ObjectMapper(new MessagePackFactory());
+			MessageSerializer messageSerializer = new MessageSerializer();
+			final int count = 1000000;
+			byte[] bytes = null;
+
+			for (int i = 0; i < count; i++) {
+				try {
+					bytes = objectMapper.writeValueAsBytes(msg);
+					objectMapper.readValue(bytes, Message.class);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+			for (int i = 0; i < count; i++) {
+				try {
+					bytes = messageSerializer.serialize(msg);
+					messageSerializer.deserialize(bytes);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			long start = System.currentTimeMillis();
+
+			for (int i = 0; i < count; i++) {
+				try {
+					bytes = objectMapper.writeValueAsBytes(msg);
+					objectMapper.readValue(bytes, Message.class);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			System.out.println("time:" + Long.toString(System.currentTimeMillis() - start));
+			System.out.println("len:" + Integer.toString(bytes.length));
+			start = System.currentTimeMillis();
+			for (int i = 0; i < count; i++) {
+				try {
+					bytes = messageSerializer.serialize(msg);
+					messageSerializer.deserialize(bytes);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			System.out.println("time:" + Long.toString(System.currentTimeMillis() - start));
+			System.out.println("len:" + Integer.toString(bytes.length));
+*/
 		}
+
 
 		return;
 	}

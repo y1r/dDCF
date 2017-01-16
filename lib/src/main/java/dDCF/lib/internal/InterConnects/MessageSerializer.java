@@ -65,7 +65,7 @@ public class MessageSerializer {
 			writeByteArray(stream, msg.task.result);
 			stream.writeBoolean(msg.task.ended);
 		}
-		stream.flush();
+		stream.close();
 
 		return byteArrayOutputStream.toByteArray();
 	}

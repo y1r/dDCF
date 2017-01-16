@@ -40,12 +40,6 @@ public class InterConnect {
 		dataInputStream = new DataInputStream(inputStream);
 		dataOutputStream = new DataOutputStream(outputStream);
 
-		// TODO: benchmarking
-/*
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		objectMapper.configure(WRITE_ENUMS_USING_INDEX, true);
-		*/
-
 		active = true;
 
 		thread = new Thread(() ->
