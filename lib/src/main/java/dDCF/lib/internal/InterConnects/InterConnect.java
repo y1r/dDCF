@@ -11,10 +11,8 @@ import org.msgpack.jackson.dataformat.MessagePackFactory;
 import java.io.*;
 import java.net.Socket;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class InterConnect {
 	static ObjectMapper objectMapper = new ObjectMapper(new MessagePackFactory());
@@ -30,15 +28,19 @@ public class InterConnect {
 	ConcurrentHashMap<Long, Message> returnedMessages = new ConcurrentHashMap<>();
 	ConcurrentHashMap<Long, CountDownLatch> waitingReplies = new ConcurrentHashMap<>();
 
-	BlockingQueue<byte[]> sendQueue = new LinkedBlockingQueue<>();
-	Thread sendThread;
-
-	public InterConnect(Socket sock, boolean isBaseCon) throws IOException {
+	public InterConnect(Socket sock) throws IOException {
 		inputStream = sock.getInputStream();
 		outputStream = sock.getOutputStream();
 
+		/*
+		System.out.println("non-buffered");
 		dataInputStream = new DataInputStream(inputStream);
 		dataOutputStream = new DataOutputStream(outputStream);
+		*/
+
+//		System.out.println("buffered");
+		dataInputStream = new DataInputStream(new BufferedInputStream(inputStream));
+		dataOutputStream = new DataOutputStream(new BufferedOutputStream(outputStream));
 
 		active = true;
 
@@ -67,37 +69,28 @@ public class InterConnect {
 			}
 		});
 		thread.start();
-
-		sendThread = new Thread(() ->
-		{
-			while (active) {
-				try {
-					byte[] packedMsg = sendQueue.take();
-
-					dataOutputStream.writeInt(packedMsg.length);
-					dataOutputStream.write(packedMsg);
-
-				} catch (InterruptedException e) {
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		sendThread.start();
 	}
 
 	private void sendMessage(Message msg) throws IOException {
+		byte[] buf = null;
+
+		if (Config.getInstance().usePacket)
+			buf = messageSerializer.serialize(msg);
+		else
+			buf = objectMapper.writeValueAsBytes(msg);
+
 		while (true) {
 			try {
 				Utils.debugPrint("send" + msg.toString());
-				if (Config.getInstance().usePacket) {
-					sendQueue.put(messageSerializer.serialize(msg));
-				} else {
-					sendQueue.put(objectMapper.writeValueAsBytes(msg));
+				synchronized (this) {
+					dataOutputStream.writeInt(buf.length);
+					dataOutputStream.write(buf);
+					dataOutputStream.flush();
 				}
 				Utils.debugPrint("send" + msg.toString());
 				break;
-			} catch (InterruptedException e) {
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}

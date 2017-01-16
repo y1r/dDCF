@@ -43,7 +43,7 @@ public class NQueen implements Work {
 		System.out.println("NQueen1:" + time / 10.0);
 */
 		long time = 0;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 100; i++) {
 			long start = System.currentTimeMillis();
 			NQueen2(new NQueenData(N, init));
 			long end = System.currentTimeMillis();
@@ -51,7 +51,7 @@ public class NQueen implements Work {
 			System.out.print('.');
 		}
 		System.out.println();
-		System.err.println(ConnectionManager.getInstance().getConnectionCounts() + "," + time / 10.0);
+		System.err.println(ConnectionManager.getInstance().getConnectionCounts() + "," + time / 100.0);
 //		System.out.println("NQueen2:" + time / 100.0);
 
 		System.exit(0);
@@ -169,7 +169,14 @@ public class NQueen implements Work {
 			return NQueen1(N, newmap);
 		}
 
+		// slow
 		int currentMax = Arrays.stream(map).max().orElse(-1);
+
+		// fast
+/*		int currentMax = -1;
+		for (int i = 0; i < map.length; i++)
+			if (map[i] > currentMax) currentMax = map[i];
+*/
 
 		// want to remove
 		int pos = 0;
@@ -219,7 +226,14 @@ public class NQueen implements Work {
 
 		tasks.join();
 
+		// slow
 		int sum = taskList.stream().mapToInt(value -> (Integer) value.getResult()).sum();
+
+		// fast
+/*		int sum = 0;
+		for (int i = 0; i < taskList.size(); i++)
+			sum += (int) taskList.get(i).getResult();
+*/
 
 		if (res != 0) return res;
 		return sum;

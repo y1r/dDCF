@@ -80,7 +80,23 @@ public class main {
 			}
 
 			Worker.startWorkers(cons);
-/*
+
+			/* ***** Socket Benchmark ***** */
+			/*
+			int count;
+			Scanner scanner = new Scanner(System.in);
+			count = scanner.nextInt();
+			long start = System.currentTimeMillis();
+
+			for (int i = 0; i < count; i++) {
+				cons.stealTask();
+			}
+
+			System.out.println("time:" + Long.toString(System.currentTimeMillis() - start));
+			*/
+
+			/* ***** Serialization Benchmark ***** */
+			/*
 			Message msg = MessageFactory.newMessage(MESSAGE_TYPE.JOB_REQUEST);
 			ObjectMapper objectMapper = new ObjectMapper(new MessagePackFactory());
 			MessageSerializer messageSerializer = new MessageSerializer();
@@ -128,9 +144,8 @@ public class main {
 			}
 			System.out.println("time:" + Long.toString(System.currentTimeMillis() - start));
 			System.out.println("len:" + Integer.toString(bytes.length));
-*/
+			*/
 		}
-
 
 		return;
 	}

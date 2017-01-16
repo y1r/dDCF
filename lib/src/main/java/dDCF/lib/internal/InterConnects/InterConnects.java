@@ -76,13 +76,13 @@ public class InterConnects {
 	}
 
 	private void appendSocket(Socket sock) throws IOException {
-		InterConnect interConnect = new InterConnect(sock, false);
+		InterConnect interConnect = new InterConnect(sock);
 		interConnectList.add(interConnect);
 	}
 
 	private void registerMaster(InetAddress inetAddress, int port) throws IOException {
 		Socket sock = new Socket(inetAddress, port);
-		master = new InterConnect(sock, true);
+		master = new InterConnect(sock);
 	}
 
 	public Pair<Long, Task> stealTask() {
