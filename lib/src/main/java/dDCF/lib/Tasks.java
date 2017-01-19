@@ -16,9 +16,34 @@ public class Tasks {
 	}
 
 	public void join() {
+		/*
 		while (tasks.stream().anyMatch(value -> !value.isEnded())) {
 			Worker.work();
 		}
+		*/
+
+		while (needWorking()) {
+			Worker.work();
+		}
+/*
+		boolean needWorking = false;
+
+		do {
+			needWorking = false;
+			for (Task task : tasks) {
+				if (!task.isEnded()) {
+					needWorking = true;
+					Worker.work();
+				}
+			}
+		} while (needWorking);
+*/
+	}
+
+	private boolean needWorking() {
+		for (int i = 0; i < tasks.size(); i++)
+			if (!tasks.get(i).isEnded()) return true;
+		return false;
 	}
 
 	int getLength() {

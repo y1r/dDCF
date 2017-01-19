@@ -6,7 +6,6 @@ import dDCF.lib.internal.InterConnects.ConnectionManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -170,13 +169,13 @@ public class NQueen implements Work {
 		}
 
 		// slow
-		int currentMax = Arrays.stream(map).max().orElse(-1);
+		//int currentMax = Arrays.stream(map).max().orElse(-1);
 
 		// fast
-/*		int currentMax = -1;
+		int currentMax = -1;
 		for (int i = 0; i < map.length; i++)
 			if (map[i] > currentMax) currentMax = map[i];
-*/
+
 
 		// want to remove
 		int pos = 0;
@@ -227,13 +226,13 @@ public class NQueen implements Work {
 		tasks.join();
 
 		// slow
-		int sum = taskList.stream().mapToInt(value -> (Integer) value.getResult()).sum();
+//		int sum = taskList.stream().mapToInt(value -> (Integer) value.getResult()).sum();
 
 		// fast
-/*		int sum = 0;
+		int sum = 0;
 		for (int i = 0; i < taskList.size(); i++)
 			sum += (int) taskList.get(i).getResult();
-*/
+
 
 		if (res != 0) return res;
 		return sum;
