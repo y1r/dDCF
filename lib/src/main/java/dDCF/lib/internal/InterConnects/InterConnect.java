@@ -77,8 +77,8 @@ public class InterConnect {
 				synchronized (this) {
 					dataOutputStream.writeInt(buf.length);
 					dataOutputStream.write(buf);
-					dataOutputStream.flush();
 				}
+				dataOutputStream.flush();
 				Utils.debugPrint(() -> "send" + msg.toString());
 				break;
 			} catch (IOException e) {
