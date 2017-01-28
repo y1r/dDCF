@@ -73,13 +73,13 @@ public class InterConnect {
 
 		while (true) {
 			try {
-				Utils.debugPrint("send" + msg.toString());
+				Utils.debugPrint(() -> "send" + msg.toString());
 				synchronized (this) {
 					dataOutputStream.writeInt(buf.length);
 					dataOutputStream.write(buf);
 					dataOutputStream.flush();
 				}
-				Utils.debugPrint("send" + msg.toString());
+				Utils.debugPrint(() -> "send" + msg.toString());
 				break;
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -89,10 +89,10 @@ public class InterConnect {
 
 	private Message readMessage() throws IOException {
 		int msgLen = dataInputStream.readInt();
-		Utils.debugPrint("read" + msgLen);
+		Utils.debugPrint(() -> "read" + msgLen);
 		byte[] packedMsg = Utils.readInputStream(dataInputStream, msgLen);
 
-		Utils.debugPrint("read" + packedMsg.toString());
+		Utils.debugPrint(() -> "read" + packedMsg.toString());
 
 		if (Config.getInstance().usePacket) {
 			return messageSerializer.deserialize(packedMsg);
@@ -138,10 +138,10 @@ public class InterConnect {
 	public List<Pair<byte[], Integer>> registerNode() {
 		Message msg = MessageFactory.newMessage(MESSAGE_TYPE.NODE_REGISTER);
 
-		Utils.debugPrint("regist");
+		Utils.debugPrint(() -> "regist");
 		msg.serverPort = Config.getInstance().localPort;
 		msg.serverIPv4Addr = Config.getInstance().localHost.getAddress();
-		Utils.debugPrint("registed");
+		Utils.debugPrint(() -> "registed");
 
 		Message reply = null;
 		try {

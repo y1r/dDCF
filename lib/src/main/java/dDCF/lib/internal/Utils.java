@@ -6,15 +6,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Date;
+import java.util.function.Supplier;
 
 public class Utils {
-	public static void debugPrint(String msg) {
+	public static void debugPrint(Supplier<String> msg) {
 		Config cfg = Config.getInstance();
 
 		if (cfg.isDebug) {
 			Date date = new Date();
 
-			System.out.println("[debug " + date.toString() + "]: " + msg);
+			System.out.println("[debug " + date.toString() + "]: " + msg.get());
 		}
 	}
 

@@ -91,7 +91,7 @@ public class CmdLineParser {
 		cfg.isDebug = cmd.hasOption("d");
 		cfg.usePacket = cmd.hasOption("c");
 
-		Utils.debugPrint(cfg.toString());
+		Utils.debugPrint(cfg::toString);
 
 		return cfg;
 	}

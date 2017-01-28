@@ -39,7 +39,7 @@ public class main {
 		try {
 			cons = new InterConnects(cfg);
 		} catch (IOException e) {
-			Utils.debugPrint("InterConnects IOException." + e.getMessage());
+			Utils.debugPrint(() -> "InterConnects IOException." + e.getMessage());
 			return;
 		}
 

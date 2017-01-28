@@ -51,13 +51,13 @@ public class ConnectionManager {
 
 		nodeList.add(new Pair<>(addr, port));
 
-		Utils.debugPrint("offers:");
+		Utils.debugPrint(() -> "offers:");
 		for (Pair<byte[], Integer> hoge : offers)
-			Utils.debugPrint(hoge.toString());
+			Utils.debugPrint(hoge::toString);
 
-		Utils.debugPrint("nodeList:");
+		Utils.debugPrint(() -> "nodeList:");
 		for (Pair<byte[], Integer> hoge : nodeList)
-			Utils.debugPrint(hoge.toString());
+			Utils.debugPrint(hoge::toString);
 
 		return offers;
 	}

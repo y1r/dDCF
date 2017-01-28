@@ -56,7 +56,7 @@ public class Worker extends Thread {
 				continue;
 			}
 
-			return;
+			return; // couldn't find local-located task
 		}
 	}
 

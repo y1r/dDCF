@@ -40,7 +40,7 @@ public class InterConnects {
 			registerMaster(cfg.remoteHost, cfg.remotePort);
 			List<Pair<byte[], Integer>> offers = master.registerNode();
 			for (Pair<byte[], Integer> cur : offers) {
-				Utils.debugPrint("connect to " + cur.toString());
+				Utils.debugPrint(() -> "connect to " + cur.toString());
 				appendAddress(InetAddress.getByAddress(cur.first), cur.second);
 			}
 		}
@@ -54,9 +54,9 @@ public class InterConnects {
 		{
 			while (accepterWorking) {
 				try {
-					Utils.debugPrint("Accept Loop!");
+					Utils.debugPrint(() -> "Accept Loop!");
 					Socket socket = accepter.accept();
-					Utils.debugPrint("Accepted[" + interConnectList.size() + "]:" + socket.getInetAddress().toString());
+					Utils.debugPrint(() -> "Accepted[" + interConnectList.size() + "]:" + socket.getInetAddress().toString());
 					appendSocket(socket);
 				} catch (IOException e) {
 				}

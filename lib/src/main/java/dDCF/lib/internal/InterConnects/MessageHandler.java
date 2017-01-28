@@ -22,8 +22,8 @@ public class MessageHandler {
 
 				reply = MessageFactory.newMessage(MESSAGE_TYPE.NODE_OFFER, msg.sequenceCode + 1);
 
-				Utils.debugPrint("serverIPv4Addr:" + msg.serverIPv4Addr);
-				Utils.debugPrint("serverPort:" + msg.serverPort);
+				Utils.debugPrint(() -> "serverIPv4Addr:" + msg.serverIPv4Addr);
+				Utils.debugPrint(() -> "serverPort:" + msg.serverPort);
 
 				reply.nodesOffer = ConnectionManager.getInstance().registerNodeAndOffer(msg.serverIPv4Addr, msg.serverPort);
 
