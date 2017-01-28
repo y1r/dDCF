@@ -16,7 +16,7 @@ public class JarByteClassLoader extends ClassLoader {
 	private JarByteClassLoader() {
 	}
 
-	public static void loadJarFile(byte[] b) throws IOException {
+	public synchronized static void loadJarFile(byte[] b) throws IOException {
 		if (loader == null) {
 			loader = new JarByteClassLoader();
 			loader.jarByte = b;
