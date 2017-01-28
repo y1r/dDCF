@@ -1,13 +1,15 @@
 package dDCF.lib;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class TaskDeque {
-	private final static Object hashMapLock = new Object();
 	private static LinkedBlockingQueue<Task> queue = new LinkedBlockingQueue<>();
-	private static HashMap<Long, TaskDeque> taskDequeHashMap = new HashMap<>();
+	private static Map<Long, TaskDeque> taskDequeHashMap = new ConcurrentHashMap<>();
 	private LinkedBlockingDeque<Task> deque = new LinkedBlockingDeque<>();
 
 	public TaskDeque() {
@@ -15,9 +17,7 @@ public class TaskDeque {
 		queue.drainTo(tmpTaskList);
 		deque.addAll(tmpTaskList);
 
-		synchronized (hashMapLock) {
-			taskDequeHashMap.put(Thread.currentThread().getId(), this);
-		}
+		taskDequeHashMap.put(Thread.currentThread().getId(), this);
 	}
 
 	public static void appendTask(Task t) {
@@ -40,23 +40,16 @@ public class TaskDeque {
 	}
 
 	public static Task steal() {
-		List<TaskDeque> list = new ArrayList<>();
-
 		long thId = Thread.currentThread().getId();
 
-		for (Map.Entry<Long, TaskDeque> t : taskDequeHashMap.entrySet()) {
-			long key = t.getKey();
-			TaskDeque deq = t.getValue();
+		for (Map.Entry<Long, TaskDeque> e : taskDequeHashMap.entrySet()) {
+			long key = e.getKey();
+			TaskDeque deq = e.getValue();
 
-			if (key != thId && deq.deque.size() != 0)
-				list.add(deq);
-		}
-
-		Collections.shuffle(list);
-
-		for (int i = 0; i < list.size(); i++) {
-			Task t = list.get(i)._pollFirst();
-			if (t != null) return t;
+			if (key != thId) {
+				Task t = deq._pollFirst();
+				if (t != null) return t;
+			}
 		}
 
 		return null;

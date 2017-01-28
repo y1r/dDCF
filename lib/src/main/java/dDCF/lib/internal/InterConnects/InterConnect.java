@@ -31,14 +31,6 @@ public class InterConnect {
 	public InterConnect(Socket sock) throws IOException {
 		inputStream = sock.getInputStream();
 		outputStream = sock.getOutputStream();
-
-		/*
-		System.out.println("non-buffered");
-		dataInputStream = new DataInputStream(inputStream);
-		dataOutputStream = new DataOutputStream(outputStream);
-		*/
-
-//		System.out.println("buffered");
 		dataInputStream = new DataInputStream(new BufferedInputStream(inputStream));
 		dataOutputStream = new DataOutputStream(new BufferedOutputStream(outputStream));
 

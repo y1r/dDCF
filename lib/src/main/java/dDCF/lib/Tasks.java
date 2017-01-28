@@ -10,7 +10,8 @@ public class Tasks {
 
 	public int appendTask(Task task) {
 		tasks.add(task);
-		TaskDeque.appendTask(task); // add to last
+		if (tasks.size() > 1) // reserve tasks[0]
+			TaskDeque.appendTask(task); // add to last
 
 		return getLength();
 	}
@@ -22,22 +23,14 @@ public class Tasks {
 		}
 		*/
 
+		// 1% faster on localhost, 1 to 1, N = 200
+		// work on reserved task( tasks[0] )
+		if (tasks.size() != 0)
+			tasks.get(0).execute();
+
 		while (needWorking()) {
 			Worker.work();
 		}
-/*
-		boolean needWorking = false;
-
-		do {
-			needWorking = false;
-			for (Task task : tasks) {
-				if (!task.isEnded()) {
-					needWorking = true;
-					Worker.work();
-				}
-			}
-		} while (needWorking);
-*/
 	}
 
 	private boolean needWorking() {

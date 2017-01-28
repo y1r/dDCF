@@ -6,6 +6,7 @@ import dDCF.lib.internal.InterConnects.InterConnects;
 
 public class Worker extends Thread {
 	private static InterConnects interConnects;
+	private static Thread[] workers;
 
 	public Worker() {
 	}
@@ -25,8 +26,8 @@ public class Worker extends Thread {
 		interConnects = ics;
 
 		int node = Config.getInstance().threads;
-		System.out.println("nodes:" + node);
-		Thread[] workers = new Thread[node];
+		System.out.println("threads:" + node);
+		workers = new Thread[node];
 
 		for (int i = 0; i < workers.length; i++) {
 			workers[i] = Worker.getInfiniteWorker();
