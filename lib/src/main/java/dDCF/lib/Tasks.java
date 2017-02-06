@@ -10,8 +10,7 @@ public class Tasks {
 
 	public int appendTask(Task task) {
 		tasks.add(task);
-		if (tasks.size() > 1) // reserve tasks[0]
-			TaskDeque.appendTask(task); // add to last
+		TaskDeque.appendTask(task); // add to last
 
 		return getLength();
 	}
@@ -22,11 +21,6 @@ public class Tasks {
 			Worker.work();
 		}
 		*/
-
-		// 1% faster on localhost, 1 to 1, N = 200
-		// work on reserved task( tasks[0] )
-		if (tasks.size() != 0)
-			tasks.get(0).execute();
 
 		while (needWorking()) {
 			Worker.work();

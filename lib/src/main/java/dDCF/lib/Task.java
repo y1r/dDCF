@@ -1,12 +1,10 @@
 package dDCF.lib;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import dDCF.lib.internal.SerializableFunction;
 
 import java.io.Serializable;
 
 public class Task {
-	@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXTERNAL_PROPERTY)
 	public SerializableFunction<Serializable, Serializable> function;
 
 	public Serializable input;

@@ -26,9 +26,6 @@ project(':runtime') {
 
 project(':lib') {
     dependencies {
-        compile 'org.msgpack:jackson-dataformat-msgpack:+'
-        compile 'com.fasterxml.jackson.core:jackson-databind:+'
-        compile 'com.fasterxml.jackson.module:jackson-module-afterburner:+'
     }
 
     jar {

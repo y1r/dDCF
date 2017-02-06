@@ -25,7 +25,7 @@ public class CmdLineParser {
 		// common options
 		opts.addOption("l", "local", true, "Local address:port");
 		opts.addOption("t", "threads", true, "Number of available threads");
-		opts.addOption("c", "custom-packet", false, "Use custom packet serializer");
+		opts.addOption("s", "prob-of-steal", true, "Probability of work-stealing (Default: 1.0)");
 		opts.addOption("h", "help", false, "Show usage");
 		opts.addOption("d", "debug", false, "Debug mode");
 	}
@@ -34,7 +34,7 @@ public class CmdLineParser {
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.setOptionComparator(new Comparator<Option>() {
 			// http://stackoverflow.com/questions/11741625/apache-commons-cli-ordering-help-options
-			private static final String OPTS_ORDER = "mpwltchd"; // short option names
+			private static final String OPTS_ORDER = "mpwltshd"; // short option names
 
 			@Override
 			public int compare(Option o1, Option o2) {
@@ -89,7 +89,11 @@ public class CmdLineParser {
 
 		cfg.threads = Integer.parseInt(cmd.getOptionValue("t", Integer.toString(Runtime.getRuntime().availableProcessors())));
 		cfg.isDebug = cmd.hasOption("d");
-		cfg.usePacket = cmd.hasOption("c");
+
+		if (cmd.hasOption("s"))
+			cfg.stealProb = Double.parseDouble(cmd.getOptionValue("s"));
+		else
+			cfg.stealProb = 1.0d;
 
 		Utils.debugPrint(cfg::toString);
 

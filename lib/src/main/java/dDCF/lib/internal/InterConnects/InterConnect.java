@@ -1,12 +1,10 @@
 package dDCF.lib.internal.InterConnects;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dDCF.lib.Task;
 import dDCF.lib.internal.Config;
 import dDCF.lib.internal.Pair;
 import dDCF.lib.internal.SerializedTask;
 import dDCF.lib.internal.Utils;
-import org.msgpack.jackson.dataformat.MessagePackFactory;
 
 import java.io.*;
 import java.net.Socket;
@@ -15,15 +13,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
 public class InterConnect {
-	static ObjectMapper objectMapper = new ObjectMapper(new MessagePackFactory());
 	static MessageSerializer messageSerializer = new MessageSerializer();
 	public DataInputStream dataInputStream;
 	public DataOutputStream dataOutputStream;
-	Thread thread;
 	InputStream inputStream;
 	OutputStream outputStream;
 	boolean active;
 	MessageHandler messageHandler = new MessageHandler();
+	Thread thread;
 
 	ConcurrentHashMap<Long, Message> returnedMessages = new ConcurrentHashMap<>();
 	ConcurrentHashMap<Long, CountDownLatch> waitingReplies = new ConcurrentHashMap<>();
@@ -64,16 +61,12 @@ public class InterConnect {
 	}
 
 	private void sendMessage(Message msg) throws IOException {
-		byte[] buf = null;
-
-		if (Config.getInstance().usePacket)
-			buf = messageSerializer.serialize(msg);
-		else
-			buf = objectMapper.writeValueAsBytes(msg);
+		byte[] buf = messageSerializer.serialize(msg);
 
 		while (true) {
 			try {
 				Utils.debugPrint(() -> "send" + msg.toString());
+
 				synchronized (this) {
 					dataOutputStream.writeInt(buf.length);
 					dataOutputStream.write(buf);
@@ -81,9 +74,10 @@ public class InterConnect {
 				dataOutputStream.flush();
 				Utils.debugPrint(() -> "send" + msg.toString());
 				break;
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
 		}
 	}
 
@@ -94,11 +88,7 @@ public class InterConnect {
 
 		Utils.debugPrint(() -> "read" + packedMsg.toString());
 
-		if (Config.getInstance().usePacket) {
-			return messageSerializer.deserialize(packedMsg);
-		} else {
-			return objectMapper.readValue(packedMsg, Message.class);
-		}
+		return messageSerializer.deserialize(packedMsg);
 	}
 
 	private Message sendMessageAndWaitReply(Message msg) throws IOException {

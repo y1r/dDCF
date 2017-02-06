@@ -19,8 +19,8 @@ public class Config {
 	public InetAddress localHost;
 	public int localPort;
 	public boolean isDebug;
-	public boolean usePacket = false;
 	public int threads;
+	public double stealProb;
 
 	private Config() {
 	}
@@ -48,8 +48,8 @@ public class Config {
 		stringBuilder.append("localHost:" + localHost.toString() + " ");
 		stringBuilder.append("localPort:" + localPort + " ");
 		stringBuilder.append("threads:" + threads + " ");
-		stringBuilder.append("isDebug:" + isDebug);
-		stringBuilder.append("usePacket:" + usePacket);
+		stringBuilder.append("isDebug:" + isDebug + " ");
+		stringBuilder.append("stealProb:" + stealProb + " ");
 
 		return stringBuilder.toString();
 	}
