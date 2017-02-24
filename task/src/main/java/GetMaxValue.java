@@ -18,10 +18,6 @@ public class GetMaxValue {
 		TaskDeque.appendTask(t);
 	}
 
-	public void ender() {
-		System.out.println("ender");
-	}
-
 	Serializable start(Serializable t) {
 		try {
 			Scanner scanner = new Scanner(System.in);

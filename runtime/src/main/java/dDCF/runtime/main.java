@@ -53,7 +53,6 @@ public class main {
 						Work work = (Work) obj;
 						work.starter();
 						Worker.startWorkers(cons);
-						work.ender();
 					}
 				} else {
 					System.out.println("Couldn't find valid work.");

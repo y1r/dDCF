@@ -247,10 +247,6 @@ public class NQueen implements Work {
 		t = new Task(NQueen::main, null);
 		TaskDeque.appendTask(t);
 	}
-
-	@Override
-	public void ender() {
-	}
 }
 
 class NQueenData implements Serializable {
